@@ -1,0 +1,61 @@
+---
+title: "Lucy's ResPitch"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+We are going to be using ggplot. First load it so we can use it.
+```{r}
+library(ggplot2)
+```
+
+This line imports my data into R. Show R object.   
+We are going to turn this into a great graph because it's difficult to take away any patterns by just looking at these numbers. 
+```{r}
+hp_data <- 
+  read.csv("https://docs.google.com/uc?id=0B2jjnIpe-k4MMmgxRVAtamZpVkE&export=download")
+```
+
+We start by telling R we want to use ggplot. We do this by typing in the ggplot with (). 
+
+Inside the round brackets, we tell ggplot what data we want to plot. We then run the code. We get a grey background. This is the base of our plot.
+```{r}
+ggplot(data = hp_data)
+```
+  
+1. Next we want to add a plot. We will make a bar graph by 'adding' another layer. We do this by putting a plus sign at the end, this tells R that we want to add another layer and there will be more instructions on the next line.
+2. The next 'layer' we will add is the graph. Different graphs are called "geoms" in ggplot. This is short for geometric object because a graph uses geometric objects to represent data. We want to add a bar plot so we will use "geom_col" - columns
+3. Now we need to tell R more details on how to make our bar plot. We need to tell it what goes on the x and y axes. To do this, first we add aes()  - "aesthetics"  - it is in here that we tell R how to make our plot. Within these round brackets we will tell R that on the X axis we want 'House' and on the y-axis we want "Percent", the percent of people that were sorted into that house
+
+```{r}
+ggplot(data = hp_data) +
+  geom_col(aes(x = House, y = Percent))
+```
+  
+With only 2 lines of code - "instructions to the computer" we have a decent plot. The great thing about R is that we can add features and customise this as much as we want!  
+Lets make this fancier by adding a third variable! You will notice in the table that we also have the sex of people sorted into each house. Can we make a bar plot where we can show the sex of people sorted into each house? Yes! Very easily by adding just 2 words! So within aes() - where we tell R about the details of the plot we will add fill = sex, we want the fill - the colour inside the bars - to be colours according to sex.
+
+```{r}
+ggplot(data = hp_data) +
+  geom_col(aes(x = House, y = Percent, fill = Sex))
+```
+  
+This is good but I don't like the way that bars are stack on top of each other. It's ugly and it's hard to compare.  
+We can change this easily by adding another 2 words. We will add them at the end, position = dodge This tells R that we want the bars to be next to each other.
+```{r}
+ggplot(data = hp_data) +
+  geom_col(aes(x = House, y = Percent, fill = Sex), position = "dodge")
+```
+Now we can see something interesting. There are more males in Gryffindor and Slytherin and more females in Hufflepuff and Ravenclaw - read into that what you will....  
+Now this is not publication ready. We want to add a title and maybe change the colours. This can be done really easily by "adding" layers! Lets add a title first.
+1. First we add a plus - this tells R that we want to add another layer and to expect more code/instructions
+2. Then we want to add labs() - this lets you add labels
+3. Inside the brackets we can tell R what labels we want to add. title tells R we want to change the title, then we tell it what we want the title to be using = "" - adding our title in quotes here.
+
+```{r}
+ggplot(data = hp_data) +
+  geom_col(aes(x = House, y = Percent, fill = Sex), position = "dodge") +
+  labs(title = "Hufflepuff 4 life!")
+```
+
