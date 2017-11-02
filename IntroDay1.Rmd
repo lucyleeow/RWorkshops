@@ -1,0 +1,137 @@
+---
+title: "Intro R course day 1"
+author: Lucy Liu
+output:
+  pdf_document: default
+  html_document: 
+    keep_md: true
+---
+
+#Introduction to R/RStudio 
+
+##Difference between R & RStudio
+
+Who does know the difference between R and RStudio? 
+
+We asked you to install both R and RStudio. R is a programming language - think of it as what is running 'under the hood' doing all the calculations and making your plots. If you only installed R, the only way to use it is via text. %show terminal with R%
+This is difficult to use, which is why RStudio was developed - it's basically a graphical user interface for R. It gives you these nice windows and click buttons making it easier to use. R is still doing all the calculations, RStudio just makes it easier for you to use/interact with R. Both are free!
+
+##The 4 panels
+
+Introduce the 4 windows: Script editor, Console, Environment/History, Files/Plots/Help/packages.
+
+The first panel is the script editor. Scripts are just 'word' documents that have code in them - because code is just words, special words the computer understands. You can make a new script %show% and this will be shown in this window. It is a good way to organise your work because you can save it - it will be a .r file - and refer to it or edit it later. If you haven't opened a script, I'll get you to open a new script and save it.  
+
+You can type some code here, then use Ctl/Cmd + Enter to make it run. E.g. 1+1.
+
+The result pops up in the console down here. You can also type in code/commands down here. To run code you only have to press Enter. It's a good way to test and play around with code but code written down here is not really saved - so you can't refer to it later - and you can't click up here on code you've already run to edit it. 
+
+In this panel here you have your environment - you can see variables that you have created. For now just think of this panel has showing the data that you have input into R. In the next tab you have your History - you can look at the history of the code you have run. 
+
+Down here you have a few tabs. The first is files. This is just like the directory of files in your computer. When you click on files - you can see where you are in your computer - this is the working directory - this means that when you import data into R, it will look in this folder by default and when you save things like graphs that you've made, they will be saved here by default. When you save your R script that you've created, it is saved in this folder as well. It's good practice to keep your files orderly - so your first challenge is to create a new folder somewhere in your computer and set your working directory to be that folder. For example - I can create a folder on your desktop. Then use `setwd("path/to/dir")`. 
+
+The next tab is plots - all plots that you generate will be displayed here. The other tab I'll talk about is help - this is a good place to get help on functions in R.
+
+##Maths
+The easiest thing to do in R is maths. 
+* = multiplication
+/ = divide
+^ = exponent
+
+###Cancelling commands
+You can see here that if you don't finish a command it will expect you to finish it - the plus here means that you haven't finished your command. You can either finish your command or press esc - which stops your command and returns the > - which means you can start writing a new command.
+
+###Comments
+You can also leave yourself comments using #. Anything after a # is ignored by R. For example running the command below - R ignores my comment.
+
+```{r}
+256 * 255 #doing some multiplication
+```
+
+###Comparisons
+This is very similar to comparing things in maths. 
+What do you think will be the result?  
+What do you think `!=` means?  
+`==`  equality  
+`>`   greater than  
+`<`   less than  
+`!=`  not equal to 
+
+You get a TRUE or FALSE answer from R.
+
+##Variables
+This is similar to algebra when we used letters like 'x' to represent numbers/values. A variable is just a thing that we have given a name to so we can refer to it later. The 'thing' could be a number, it could be a whole table of data or it could be a whole matrix of data.  
+To make a variable - you just assign the name to it using <- (You might have also seen people use '='. It is almost the same but it's better practice in R to use ->)
+
+###Variable names
+R is a bit particular about the names you can give variables. The name can't start with a number or a punctuation mark and they can't contain spaces at all. E.g. is this a acceptable variable name?
+```{r, error=TRUE}
+2d <- 4
+my data <- 6
+```
+
+####Errors
+When your name is not acceptable R will return an error. An error is when R cannot do what you asked it. It prints something out in red and it tries to tell you why it couldn't do what you asked it. You'll also get better at decoding these error messages. 
+Note that R also gives a warnings. A warning is when R could do what you asked it to - but it wants you to be careful of something. Often you can ignore warnings. 
+Error: R couldn't do what you asked it to do and you need to figure out why.
+Warning: R could do what you asked it to but be wary of something. Can be ignored often.
+
+%create variable%: you can also see that it appears up here in your environment. All the variables you've created will be up here.
+
+####Variable reassignment
+Variables don't behave completely like letter in algebra. E.g. What do you think will happen here? What will 'a' be?
+```{r}
+a <- 4
+a <- a + 5
+```
+
+>CHALLENGE: What will be the value of each variable after each statement in the following program?
+>CHALLENGE: Run the code from the previous challenge, and write a command to compare mass to age. Is mass larger than age?
+
+###Removing variables
+You can also remove variables - it's good to do this because as you can imagine it can get really messy with many variables when you are trying to get something to work - test1, test2, test4.5
+
+>CHALLENGE: Clean up your working environment by deleting the mass and age variables.
+
+##Functions
+The other thing we will use a lot are functions. A function is just a thing that does something. Using the math analogy - these are like plus, minus, log - except they can do a lot more things.
+
+This is the sum function. When you use it, you write the name of the function - sum - and always follow it with brackets. You usually put something in these brackets that specify how you want to use this function. Here you need to tell sum what you want to add up.
+```{r}
+sum(1,2,4)
+```
+Now lets do something with words. The paste function joins words/letters together.
+
+>CHALLENGE: First use ?paste to look up how to use the paste function. Then join together these 2 phrases: "My name is" & "Lucy" with ":" between them. The output should look like "My name is:Lucy"
+
+To understand how to use any function - just type ? + name of function and the help page for the function will open here. It's really helpful to be able to understand a help page - but they can be a bit confusing. First it describes what the function does, they it tells you what you can specify in the brackets, gives details then gives examples at the end.
+
+**Take A 10 min break after this.**
+
+#Data types
+
+
+
+
+
+
+
+##Typos
+In programming - the computer is very particular about the instructions it gets. If you've opened a bracket, you need to close it. When you refer to a variable you need to refer to it be the exact name. e.g. data1 is NOT the same as Data1.  
+Often you will get an error - just because you've mistyped. Don't be disheartened by these errors - you got the concept right - you just need to be careful about typos. 
+
+
+
+Aims:
+
+* To gain familiarity with the various panes in the RStudio IDE
+* To gain familiarity with the buttons, short cuts and options in the Rstudio IDE
+* To understand variables and how to assign to them
+* To be able to manage your workspace in an interactive R session
+* To be able to use mathematical and comparison operations
+* To be able to call functions
+
+
+
+
+

@@ -56,6 +56,6 @@ Now this is not publication ready. We want to add a title and maybe change the c
 ```{r}
 ggplot(data = hp_data) +
   geom_col(aes(x = House, y = Percent, fill = Sex), position = "dodge") +
-  labs(title = "Hufflepuff 4 life!")
+  labs(title = "Hufflepuff 4 life!") 
 ```
 
