@@ -7,6 +7,12 @@ output:
     keep_md: true
 ---
 
+#Welcome
+1. Introduce self and helpers
+2. Make sure everyone has internet
+3. Direct everyone to the shared google docs - challenges and code will be shared there
+4. Slides
+
 #Introduction to R/RStudio 
 
 ##Difference between R & RStudio
@@ -20,7 +26,7 @@ This is difficult to use, which is why RStudio was developed - it's basically a 
 
 Introduce the 4 windows: Script editor, Console, Environment/History, Files/Plots/Help/packages.
 
-The first panel is the script editor. Scripts are just 'word' documents that have code in them - because code is just words, special words the computer understands. You can make a new script %show% and this will be shown in this window. It is a good way to organise your work because you can save it - it will be a .r file - and refer to it or edit it later. If you haven't opened a script, I'll get you to open a new script and save it.  
+The first panel is the script editor. You can think about scripts as 'word' documents that have code in them - because code is just text, special text the computer understands. You can make a new script %show% and this will be shown in this window. It is a good way to organise your work because you can save it - it will be a .r file - and refer to it or edit it later. If you haven't opened a script, I'll get you to open a new script and save it.  
 
 You can type some code here, then use Ctl/Cmd + Enter to make it run. E.g. 1+1.
 
@@ -30,13 +36,18 @@ In this panel here you have your environment - you can see variables that you ha
 
 Down here you have a few tabs. The first is files. This is just like the directory of files in your computer. When you click on files - you can see where you are in your computer - this is the working directory - this means that when you import data into R, it will look in this folder by default and when you save things like graphs that you've made, they will be saved here by default. When you save your R script that you've created, it is saved in this folder as well. It's good practice to keep your files orderly - so your first challenge is to create a new folder somewhere in your computer and set your working directory to be that folder. For example - I can create a folder on your desktop. Then use `setwd("path/to/dir")`. 
 
+***
+CHALLENGE: Make new folder and setwd to this folder
+
+***
+  
 The next tab is plots - all plots that you generate will be displayed here. The other tab I'll talk about is help - this is a good place to get help on functions in R.
 
 ##Maths
 The easiest thing to do in R is maths. 
-* = multiplication
-/ = divide
-^ = exponent
+* = multiplication  
+/ = divide  
+^ = exponent  
 
 ###Cancelling commands
 You can see here that if you don't finish a command it will expect you to finish it - the plus here means that you haven't finished your command. You can either finish your command or press esc - which stops your command and returns the > - which means you can start writing a new command.
@@ -60,11 +71,11 @@ What do you think `!=` means?
 You get a TRUE or FALSE answer from R.
 
 ##Variables
-This is similar to algebra when we used letters like 'x' to represent numbers/values. A variable is just a thing that we have given a name to so we can refer to it later. The 'thing' could be a number, it could be a whole table of data or it could be a whole matrix of data.  
-To make a variable - you just assign the name to it using <- (You might have also seen people use '='. It is almost the same but it's better practice in R to use ->)
+This is a little bit like i algebra when we used letters like 'x' to represent numbers/values. A variable is just a thing that we have given a name to so we can refer to it later. The 'thing' could be a number, it could be a whole table of data like a excel spreadsheet or it could be a whole matrix of data.  
+To make a variable - you just assign the name to it using <- (You might have also seen people use '='. It is almost the same but it's better practice in R to use <-)
 
 ###Variable names
-R is a bit particular about the names you can give variables. The name can't start with a number or a punctuation mark and they can't contain spaces at all. E.g. is this a acceptable variable name?
+R is a bit particular about the names you can give variables. The name can't start with a number or a punctuation mark and they can't contain spaces at all. What do you think R will do if I do this:?
 ```{r, error=TRUE}
 2d <- 4
 my data <- 6
@@ -79,59 +90,284 @@ Warning: R could do what you asked it to but be wary of something. Can be ignore
 %create variable%: you can also see that it appears up here in your environment. All the variables you've created will be up here.
 
 ####Variable reassignment
-Variables don't behave completely like letter in algebra. E.g. What do you think will happen here? What will 'a' be?
+Variables don't behave completely like letters in algebra. E.g. What do you think will happen here? What will 'a' be?
 ```{r}
 a <- 4
 a <- a + 5
 ```
 
->CHALLENGE: What will be the value of each variable after each statement in the following program?
->CHALLENGE: Run the code from the previous challenge, and write a command to compare mass to age. Is mass larger than age?
+***
+CHALLENGE: What will be the value of each variable after each statement in the following program?  
+mass <- 47.5  
+age <- 122  
+mass <- mass * 2.3  
+age <- age - 20  
+CHALLENGE: Run the code from the previous challenge, and write a command to compare mass to age. Is mass larger than age?  
+
+***
 
 ###Removing variables
-You can also remove variables - it's good to do this because as you can imagine it can get really messy with many variables when you are trying to get something to work - test1, test2, test4.5
+You can also remove variables - it's good to do this because as you can imagine it can get really messy with many variables when you are trying to get something to work - variable1,2,...
 
->CHALLENGE: Clean up your working environment by deleting the mass and age variables.
+Use rm() to remove variables you've created.
+
+***
+CHALLENGE: Clean up your working environment by deleting the mass and age variables.  
+
+***
 
 ##Functions
-The other thing we will use a lot are functions. A function is just a thing that does something. Using the math analogy - these are like plus, minus, log - except they can do a lot more things.
+The other thing we will use a lot are functions. A function is just a thing that does something. Using the math analogy - these are like plus, minus, log - except they can do a lot more things. We used the function setwd() to set your working directory before.
 
-This is the sum function. When you use it, you write the name of the function - sum - and always follow it with brackets. You usually put something in these brackets that specify how you want to use this function. Here you need to tell sum what you want to add up.
+This is another function. It's called sum. When you use it, you write the name of the function - sum - and always follow it with brackets. You usually put something in these brackets that specify how you want to use this function. Here you need to tell sum what you want to add up.
 ```{r}
 sum(1,2,4)
 ```
-Now lets do something with words. The paste function joins words/letters together.
+Now lets use another function. rnorm gives you random numbers from a normal distribution.
 
->CHALLENGE: First use ?paste to look up how to use the paste function. Then join together these 2 phrases: "My name is" & "Lucy" with ":" between them. The output should look like "My name is:Lucy"
+***
+CHALLENGE: First use ?rnorm to look up how to use the rnorm function. Then generate 5 random numbers from a normal distribution of mean 5 and standard deviation of 2.
+
+***
+
+**Take 10 min break**
 
 To understand how to use any function - just type ? + name of function and the help page for the function will open here. It's really helpful to be able to understand a help page - but they can be a bit confusing. First it describes what the function does, they it tells you what you can specify in the brackets, gives details then gives examples at the end.
+Google is also a great resource. If you can't figure out the help file, google it and there may be a better explanation or good examples.
 
-**Take A 10 min break after this.**
+#Vectors
+R was designed specifically for analysing data so lets start looking at how data is stored in R. A data structure is just a format for storing data. The simplest in R is a vector. You can think about a vector as a row or column in your spreadsheet - it is 1D. Its a list and it is ordered. Each cell or element has a number associated with it.  
+**Whiteboard** vector  
+We can create a vector using c() - which stands for combine.
+```{r}
+tables <- c("1", "2", "3")
+people <- c(3,4,5)
+#number of people at each table
+```
 
-#Data types
+***
+CHALLENGE: Use c() to make a vector of the names of the people on your table.
 
+***
 
+Because a vector is ordered we can easily pull out each element:
+```{r}
+tables[2]
+```
 
+##Vectorisation
+Functions also act well on vectors. What do you think will happen here?
+```{r}
+people + 5
+```
+This is really useful because we can perform a function on an entire vector easily without specifically telling R to repeat for each element.  
+```{r}
+log(people)
+```
+Comparisons. What will happen here?
+```{r}
+people>2
+```
+It's also easy to deal with several vectors. What do you think will happen here?
+```{r}
+newpeople <- c(2,4,5)
+newpeople + people
+```
 
+***
+CHALLENGE:
+Given the following vector:  
+v <- c(3,5,2,7,4,8)
 
+What do you think will happen when you run:
+1. v * 4  
+2. v > 3  
+3. v > c(1,2,3,4,5,6)  
+4. v + c(2,3,4)  
+5. v + c(1,1,1,1)  
+6. v > c(2,3)
 
+***
 
-##Typos
-In programming - the computer is very particular about the instructions it gets. If you've opened a bracket, you need to close it. When you refer to a variable you need to refer to it be the exact name. e.g. data1 is NOT the same as Data1.  
-Often you will get an error - just because you've mistyped. Don't be disheartened by these errors - you got the concept right - you just need to be careful about typos. 
+You may have noticed that R does something funny when you use 2 vectors that have different lengths. This is called recyling.  
+**Whiteboard** So when you add a vector of length 6 with a vector of length 3 - it recycles the shorter vector so it is used again. When you add a vector of length 6 with a vector of length 4 - it recycles the shorter one - but because it is not used completely - you can't divide the longer vector by the shorter one without a remainder - it gives you a warning.
 
+##Data types
+Let's look at our vectors from above again. I can add the number of people in tables.
+```{r}
+people[1] + people[2]
+```
 
+But what do you think if I do this?
+```{r, error=TRUE}
+table[1] + people[1]
+```
 
-Aims:
+Adding a number to a name 'xx' is not meaningful. How does R know that this is not meaningful?  
+This is where data types come in. There are 5 data types in R and every bit of data in R is labelled as a certain data type - R will look at it and give it a label.
+**Whiteboard**
+1. Logical TRUE or FALSE. What kind of data could be stored as TRUE or FALSE?  
+Next 3 are all numbers
+2. Integer. Number without a decimal point.
+3. Double. Number with a decimal point.
+4. Complex. Remember i - the imaginary number from maths? Numbers with i.
+5. Character. Sentences, words, letters. Always with quotes around it.
 
-* To gain familiarity with the various panes in the RStudio IDE
-* To gain familiarity with the buttons, short cuts and options in the Rstudio IDE
-* To understand variables and how to assign to them
-* To be able to manage your workspace in an interactive R session
-* To be able to use mathematical and comparison operations
-* To be able to call functions
+There is good reason R has labelled each bit of data. For example, it knows that adding a data labelled as a number to one labelled as character does not make sense. It also knows it can't take the log of data labelled as character. Can you think of something you can do with a character but not with numbers?
 
+We can look at how R has labelled our vector using typeof(). What do you think?
+```{r}
+typeof(tables)
+```
+```{r}
+typeof(people)
+```
 
+##Coercion
+You can see that R has labelled the whole vector as character or double. This is another aspect of vectors - everything in it is labelled as the same data type. So it is 1D (like a row or column in excel) and it is all one data type. And this makes sense - if you have data about the age of patients you expect all numbers, and if you have data about names of locations - you expect them to be characters.
+So what do you think R will do if I try to put different data types in a vector?
+```{r}
+vector1 <- c(2,4,"words")
+```
+So it doesn't return an error. It makes my vector. What do you think typeof() will be?
+```{r}
+typeof(vector1)
+typeof(1)
+typeof("word")
+```
+Why do you think it has done this?  
+It couldn't have labelled this vector as numbers - because you can't represent a word as a number, but you can represent a number as a word. Thus in order to not lose information, it turns everything into a character.   
+**Whiteboard** This is called coercion - when you have different data types in a vector, R can only label the vector as one of these types - the label R will use is the one where it won't lose information. So if you have logical and numbers - a number can't be represented as TRUE or FALSE but TRUE and FALSE can be represented by numbers TRUE = 1, FALSE = 0. Similarly - if you have integers and doubles - you can represent an integer as a double - just had .0 to the end. So you can see that I have written the data types in this order for a reason. R will label the vector as the data type that is right most here.
+
+#Data Structures
+##Dataframe
+Lets move on to the type of data you deal with more often - tabular data.
+**Whiteboard** This is data from your excel spreadsheet - it is 2D and has rows and columns. R deals with these really well and stores this kind of data as a dataframe. Lets look using a small dataset on cats.
+
+1. Open a new r script 
+2. Copy and paste the feline data
+3. Save as cat.csv. Click yes when window pops up asking if you are sure you want to save as csv. It should save to your working directory - the new folder you created before
+4. It should appear in your files tab
+
+This data is in your working directory (the same folder that your R script is in) but it is not in R. You need to import it into R. To do this we can use the read.csv() function. All we need to specify is the file name which is cat.csv. We don't need to give it more information because we have saved the cat.csv file in our working directory and this is the folder that R will look in by default when importing data.  
+Hopefully you can see how it works well to organise your work so the data and the R code you use to analyse this data, are saved in the same place.
+
+```{r}
+cats <- read.csv(file = "cat.csv")
+```
+You can see it appear in your environment. If you click it it displays in a nice table.  
+We can also start exploring this data. We can look at the weight column using '$'. Notice how R is helpful in offering you options.
+```{r}
+cats$weight
+```
+
+You can also check how R has labelled your data. What do you think R has labelled weights?  
+```{r}
+typeof(cats$weight)
+```
+And likes_string?
+```{r}
+typeof(cats$likes_string)
+```
+**Whiteboard** From this you may have realised that in a dataframe - R will label all the columns as the same data type. Again this makes sense - you generally want all the data in a column to be of one type. 
+
+###Factors
+R does something interesting with the coat column though. What is a factor?
+```{r}
+typeof(cats$coat)
+```
+A factor is another data type - it is used to store categorical data red, blue, yellow or small, med, big. You can see that each category is listed as a level. If you have categorical data, it is useful to store it as a factor so R knows how to deal with it in statistical analyses like GLMs and in making graphs.
+```{r}
+cats$coat
+```
+But it can also be annoying to deal with. For example if I want to add another row:
+```{r}
+garfield <- c("marmalade", 10, FALSE)
+rbind(cats, garfield)
+```
+I get an error. Why have I gotten this? When R created this factor - it assumed that the all the possible categories were given to it. So it thinks values in this column can only be black, tabby or calico. When we want to add another category, marmalade, it won't do it. This is annoying. The easiest way to solve this problem is to tell R not to make this column a factor when it reads in the data. We can always turn it into a factor later. 
+First, why has R turned it into a factor? Well, when you import data into R, if it is of the type character (words) - R will store it as a factor by default. R does give you the option of turning this off though. You may want to do this because factors can be annoying to deal with or because your character data is not categorical e.g. if you have a column of patient names - this isn't really categorical data or if you have comments from a survey question - this is not categorical.
+
+***
+CHALLENGE: Try using ?read.csv to figure out how to keep text columns as character vectors instead of factors. Then add another cat by adding 4th row with rbind()
+
+***
+
+Just to round everything off, you can convert this column back into a factor using:
+```{r}
+factor(cats$coat)
+```
+You can also convert to other data types (of course any unreasonable conversion - words to numbers gives an error).
+```{r, error=TRUE}
+as.character(cats$coat)
+as.integer(cats$weight)
+as.logical()
+```
+
+##Lists
+**Whiteboard** There are 2 other data structures (format for storing data). The first is the list. This is similar to the vector - it is 1D (like a row) but you can have different data types in a list. 
+```{r}
+list1 <- list(3.14, "pi", TRUE)
+#make a list using the function list
+list1
+```
+You will note that it lists the first thing as [[1]] but then within that it starts numbering again. Don't worry about this if it hurts your head but each element in a list doesn't just have to be 1 piece of data (like a number or a word) it can actually be a whole vector or dataframe or another list. It's like inception.  
+So I can make the first thing in my list a vector and the second thing our dataframe cats.
+```{r}
+list2 <- list(c(2,4,6), cats)
+list2
+```
+It might be weird to think about - but lists are technically still 1D but like inception within each element could be much, much more data.
+
+##Matrix
+The other data structure is a matrix. This is just like a vector where everything has to be the same data type except you can have any number of dimensions 2D like excel, 3D and I can't think beyond 3D so I won't try drawing it - but you could have any number of dimensions.  
+You make a matrix using matrix() function.
+```{r}
+1:20
+matrix1 <- matrix(1:20, nrow = 5, ncol = 4)
+matrix1
+```
+
+***
+CHALLENGE: 
+
+Consider the R output of the matrix below:
+
+          [,1] [,2]
+    [1,]    4    1  
+    [2,]    9    5  
+    [3,]   10    7  
+
+What was the correct command used to write this matrix? Examine each command and try to figure out the correct one before typing them. Think about what matrices the other commands will produce.
+
+    matrix(c(4, 1, 9, 5, 10, 7), nrow = 3)
+    matrix(c(4, 9, 10, 1, 5, 7), ncol = 2, byrow = TRUE)
+    matrix(c(4, 9, 10, 1, 5, 7), nrow = 2)
+    matrix(c(4, 1, 9, 5, 10, 7), ncol = 2, byrow = TRUE)
+    
+***
+
+#Titanic dataset
+This is a relatively well known publically available dataset about passengers in Titanic. It is stored here (click on url to show) and we can read it into R using.
+```{r}
+titanic <- read.csv("https://goo.gl/4Gqsnz")
+```
+We can explore this data set with some useful functions.
+```{r}
+str(titanic)
+```
+```{r}
+colnames(titanic)
+```
+  
+**If time install packages dplyr and ggplot2**
+
+#Afternoon
+1. Functions
+2. Subsetting
+3. ggplot
+
+**Day 1 survey!!**
 
 
 

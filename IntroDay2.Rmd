@@ -1,0 +1,598 @@
+---
+title: "IntroDay2"
+author: Lucy Liu
+output:
+  pdf_document: default
+  html_document: 
+    keep_md: true
+---
+
+#Summary Day 1
+
+First for good practice lets clean our environment - we have made lots of variables with lots of names. This can get messy so for a fresh start lets delete them all.
+
+##Variables
+We learnt how a variable is just a thing that we have given a name to. They appear here in our environment.
+```{r}
+read.csv("cat.csv")
+#this just outputs here in the console but it's not saved. 
+#I can't use it again because I haven't named it.
+```
+```{r}
+#But if I create a variable by giving this a name - 
+cats <- read.csv("cat.csv") 
+#it pops up here and I can use it again by referring to it by name.
+```
+
+##Functions
+We also learnt about functions. R has lots of functions built in already. To use them you write the name of the function - and then ALWAYS brackets. Inside the brackets you usually have to give it some input. These inputs are called arguments.   
+**%Whiteboard%**  
+We can give the arguments in 2 ways. First we can specify what the argument is.
+```{r}
+rnorm(n=4, mean = 5, sd = 1)
+```
+If we do it like this, it doesn't matter which order we do this.
+```{r}
+rnorm(sd = 1, n=2, mean = 4)
+```
+It gives us what we want.  
+We could also not give these specifications. What will R give us?
+```{r}
+rnorm(2,3,4)
+```
+If you do it this way - order matters! R expects the first number to be how many random numbers, the second to be the mean and the third to be the sd.  
+This is the same for all the functions you use in R.  
+
+##Making functions
+We also learnt how to make our own functions. This helps us because if you wanted to do 10 things - instead of typing out all your 10 steps - you write a function that will do all your 10 steps. We made a function to turn fahrenheit to kelvin.
+
+```{r, eval=FALSE, echo=TRUE}
+#Kelvin = (Fahrenheit – 32) * 5/9 + 273.15
+#instead of typing this out every time we want to do a conversion - 
+#we made a function so we just have to write the function name and give it a temp.
+
+F_to_K <- function(temp){
+  
+  kelvin <- ((temp - 32) * (5 / 9)) + 273.15
+  return(kelvin)
+}
+#temp could be anything - we could change it to bob - 
+#but we just need to change it down here as well.
+
+F_to_K()
+#We give it a number. When we look back at where we created the function - 
+#we can see that this is what the function is doing to the number. 
+```
+**%Whiteboard%**  
+In the round brackets you say what you want people to input when they use the function. So we want people to give you 1 thing so here we put 1 name - this could be any name - we are just naming it so we can refer to it down here. Here we say what we want to do with the input. When we use it - write function name and brackets.
+
+Any questions? 
+
+#Data structures & types
+We also learnt about data structures - this is a format for storing your data - think of it as a container for your data but the container has specifications for how data is ordered and what you should put where.
+
+**%Whiteboard%** 
+Vectors - 1D and all are labelled as the same data type.
+Dataframe - 2D, like your excel spreadsheet - all columns are the same data type.
+
+We learnt about 2 others but you won't use them very often.
+
+##Data types
+Every bit of data in R is labelled as 1 data type. This doesn't change your data in any way. E.g.
+```{r}
+cats$weight
+typeof(cats$weight)
+as.character(cats$weight)
+```
+What do you think will happen here?
+```{r}
+cats$likes_string
+as.integer(cats$likes_string)
+```
+The label is just for R to know what it can and can't do with that bit of data - you can log a number but not a character.  
+**%Whiteboard%** These are the basic data types.
+
+###Coercion
+If we have different data types in a vector or column - e.g. characters and numbers - R will label the whole vector as one data type - but it will do it in a way so that no data is lost. What will happen here? What will our vector look like?
+```{r}
+vector1 <- c(2,4,"dan")
+#remember dan can't be a number
+typeof(vector1)
+```
+```{r}
+vector2 <- c(TRUE, FALSE, 4)
+vector3 <- c(TRUE, FALSE, "i like cats")
+```
+Data exactly the same.
+
+###NA and factors
+A useful thing to know is what to do when your data has a whole column of numbers and someone has put xxx or missing when that bit of data is missing. %%Use new csv%%  
+What do you think this data will look like?
+```{r}
+catsDay2 <- read.csv("catDay2.csv")
+catsDay2
+```
+Data is not changed but labelling has.
+
+###Factors
+What datatype is this?
+```{r, error=TRUE}
+str(catsDay2$weight)
+```
+Remember the factors? It is another data type and it is used for labelling for categorical data. A funny quirk of R is that any column that has words/characters in it - R will read it in as a factor.
+
+We can see here that it says there are 4 levels - 4 possible categories. And R thinks of each bit of data in this column as being one of these categories.
+
+What we want is for R to know that this column should be numbers and when it sees the word missing - it is actually a NA value. We can do this easily with an option in the function.
+```{r}
+catsDay2 <- read.csv("catDay2.csv", na.strings = "missing")
+```
+We can see now that the missing 
+
+***
+CHALLENGE: Change the function below such that the word missing AND Missing are both recorded as NA values in R. 
+
+catsDay2 <- read.csv("cat.csv", na.strings = "missing")  
+
+***
+
+```{r}
+catsDay2 <- read.csv("catDay2.csv", na.strings = c("missing","Missing"))
+```
+
+Note that commas are special in R. They are used to separate arguments/inputs. 
+
+###NA
+The good think about R knowing that these values as NAs is you can do things like this. Say you want to exclude all rows that have an NA somewhere in it.
+```{r}
+na.omit(catsDay2) 
+```
+The other thing to note about NA is that they are contagious. **%Whiteboard%**  
+```{r}
+log(NA)
+```
+This makes sense. You can't take the log of a value you don't know the value of.  
+What do you think will happen here?
+```{r}
+vector1 <- c(1,2,3,NA)
+mean(vector1)
+```
+This gives NA because R says I don't know what the mean is because I don't know what this value is. You can tell it to ignore the NA value though.
+```{r}
+mean(vector1, na.rm = TRUE)
+```
+A lot of functions have this option to ignore NAs. log, sum etc
+
+##Subsetting
+To get a portion of your vector or data frame.  
+**%Whiteboard%** You use square brackets - this is important.  
+For vectors you put 1 thing - which element/s you want.  
+For dfs you put 2 things - which row/s you want and which column/s you want. Commas are special!!!
+
+This is my vector.
+```{r}
+vector1 <- 11:20
+vector1
+```
+How do I get the 6th element?
+```{r}
+vector1[6]
+```
+How do I get the 1st, 5th and 9th elements?
+```{r}
+vector1[c(1,5,9)]
+```
+Let's look at a dataframe.
+```{r}
+titanic <- read.csv("https://goo.gl/4Gqsnz")
+```
+
+How do I get the first 10 rows and the 1st and 2nd columns?
+```{r}
+titanic[1:10, c(1,2)]
+```
+What if I don't know the number of the element I want - I just know I want the first 10 rows and the name column?  
+This would be ideal.
+```{r, error=TRUE}
+titanic[1:10,Name]
+```
+The square brackets don't work this way though. It can't search. I can give it either numbers or I can use another function to search - this function will give TRUEs and FALSEs and then I can give this to the square bracket.  
+I can get the column names like this.
+```{r}
+colnames(titanic)
+```
+See how this is in the same order as the dataframe?  
+Now I need to search this for the Name column. I can do this with the %in% function we used yesterday. The notation we used was this:
+```{r}
+colnames(titanic)%in%c("Name")
+```
+This function searches colnames and finds which one is equal to Names. It returns this T and F. Remember I can only put numbers or T and F into the square brackets. **%Whiteboard%** It puts this into the second part - to know which columns we want.  
+What will this give us?
+```{r}
+titanic[1:10,colnames(titanic)%in%c("Name")]
+```
+
+***
+CHALLENGE: Change the code below so that we get the names NOT of the first 10 rows but of the rows where the cabin == C85. (Remember we need to use == when comparing things)
+
+Hint use titanic$Cabin  
+
+***
+
+```{r}
+titanic[titanic$Cabin==c("C85"),colnames(titanic)%in%c("Name")]
+```
+
+Any questions?
+
+**Take 10 min break**
+
+#Control flow 
+Introduce Miriam.
+
+**Break or Lunch** 
+
+#dplyr
+We've learnt how to manipulate data by subsetting it to get groups that we want yesterday. Now we are going to learn about a package called dplyr which was designed for data manipulation and is more intuitive to use than the standard R functions. Lets download and load the package.  
+
+```{r}
+#install.packages('dplyr') #downloads and saves to your computer. Only have to do this once.
+library(dplyr) #do this for each new session of R.
+```
+We will use the titanic data set again. I'll load it again in case anyone has deleted it or weren't here on day 1.
+```{r}
+titanic <- read.csv("https://goo.gl/4Gqsnz")
+titanic <- na.omit(titanic)
+```
+##Select
+Select function lets you select certain columns. You use it like this: 
+```{r, eval=FALSE, echo=TRUE}
+titanic %>%
+  select(Name, Sex, Survived)
+```
+%>% is called the pipe symbol and you can think of it like a pipe sending your data to the next function. So the titanic data is going to the fuction selection, which selects the columns Name, Sex and Survived.  
+If you wanted to save this new dataframe you can do this:
+```{r}
+new_df <- titanic %>%
+  select(Name, Sex, Survived)
+```
+
+##Filter
+This function filters the data. What will this do?
+```{r, eval=FALSE, echo=TRUE}
+titanic %>%
+    filter(Sex=="female") %>%
+    select(Name,Sex,Survived)
+```
+Here we have filtered the data to include only female passengers - think of this as removing the rows of men, then we send the data to the select function to select only the columns Name, Sex and Survived.
+
+***
+CHALLENGE: Write a single command (which can span multiple lines and includes pipes) that will produce a dataframe that has the values for Age, SibSp and Fare for males only. How many rows does your dataframe have and why?  
+
+***
+
+#group_by and summarise
+The next functions we'll learn about are group_by and summarise (write on whiteboard). These are great when you use them together. What will this do?
+```{r}
+survived <- titanic %>%
+              group_by(Sex) %>%
+              summarise(mean_Survived=mean(Survived))
+```
+
+```{r}
+str(survived)
+```
+Group_by gives you the same dataframe you had before - the rows are just grouped by sex. When you add summarise - it adds a new column that gives the mean of the survived column for each group.  
+
+***
+CHALLENGE: Calculate the average Survived value per Pclass and Sex. Which combination of Pclass and Sex had the highest Survived value and which combination had the lowest?  
+
+***
+
+```{r}
+titanic %>%
+  group_by(Pclass, Sex) %>%
+  summarise(mean_Survived = mean(Survived))
+```
+
+
+##mutate
+mutate creates a new column.
+```{r}
+Survived_by_Sex_Status <- titanic %>%
+    mutate(Status=Age*Pclass) %>%
+    group_by(Sex) %>%
+    summarize(mean_Status=mean(Status),
+              sd_Status=sd(Status))
+Survived_by_Sex_Status
+```
+  
+This next challenge is really tricky so you can go to lunch after doing it.  
+
+***
+CHALLENGE: Calculate the average Survived value for female passengers from each Pclass group. Then arrange the classes in descending order. 
+
+Hint: Use the dplyr function arrange() and desc(). Look at the help!  
+
+***
+
+```{r}
+titanic %>%
+  filter(Sex == "female") %>%
+  group_by(Pclass) %>%
+  summarise(mean_survived = mean(Survived)) %>%
+  arrange(desc(Pclass))
+
+```
+
+
+**Break**
+
+#dplyr and ggplot
+You can use dplyr and ggplot together!  
+We are going to use data about Melbourne house prices! I definitely can't afford anything here.
+```{r}
+houses <- read.csv("https://docs.google.com/uc?id=1wdSyZZ3U4tqMfgCKin7ogpTKaQ9gAc4t&export=download")
+houses <- na.omit(houses)
+```
+
+```{r}
+#install.packages("ggplot2")
+library(ggplot2)
+```
+
+##Scatter plot
+Lets just start plotting some things. Does not look good. I want to look at this bit of data here and I want to exclude this. You can do this with coord_cartesian().
+```{r}
+ggplot(houses) +
+  geom_point(aes(x = Landsize, y = Price)) + 
+  coord_cartesian(xlim = c(0,2000))
+```
+  
+***
+CHALLENGE: Make a scatter plot of Landsize vs YearBuilt. Change the coordinates of the y and x axis until you can visualise the data better.
+
+***
+
+```{r}
+ggplot(houses) +
+  geom_point(aes(y = Landsize, x = YearBuilt)) +
+  coord_cartesian(xlim = c(1700,2150), ylim = c(0,10000))
+```
+
+##Boxplot
+```{r}
+ggplot(houses) + 
+  geom_boxplot(aes(y = Price, x = Type))
+```
+
+***
+CHALLENGE: Make a boxplot of Price for each CouncilArea
+
+***
+
+We can't really read the labels. To fix this we can switch the axis.
+```{r}
+ggplot(houses) + 
+  geom_boxplot(aes(y = Price, x = CouncilArea)) +
+  coord_flip()
+```
+So this is getting a bit messy. We are only interested in some areas anyway. We can combine dplyr (the select and filter we were using before) with ggplot.  
+We start filtering using
+```{r, eval=FALSE, echo=TRUE}
+houses %>%
+  filter(CouncilArea %in% c("Maribyrnong", "Melbourne"))
+```
+Should I use == or %in% ?????
+
+If you remember from subsetting. What will this give me?
+```{r}
+vector1 <- 1:10
+vector1 %in% 0:5
+```
+What will this give me?
+```{r}
+vector1
+0:5
+vector1 == 0:5
+```
+Back to our plot. Note how I am sending the data - think of data flowing through these pipes - to ggplot. I dont have to specify what data I am using because it is being sent in from here.
+```{r}
+houses %>%
+  filter(CouncilArea %in% c("Maribyrnong", "Melbourne")) %>%
+  ggplot() +
+  geom_boxplot(aes(y = Price, x = CouncilArea))
+```
+
+We can also do a side by side boxplot. Say for every CouncilArea, we want to know the price for each type of house we just have to add fill = Type to aesthetics.
+```{r}
+houses %>%
+  filter(CouncilArea %in% c("Maribyrnong", "Melbourne")) %>%
+  ggplot() +
+  geom_boxplot(aes(y = Price, x = CouncilArea, fill = Type))
+```
+  
+```{r}
+houses %>%
+  filter(CouncilArea %in% c("Maribyrnong", "Melbourne")) %>%
+  ggplot() +
+  geom_boxplot(aes(y = Price, x = CouncilArea, fill = Type)) +
+  scale_fill_manual(values = c("pink", "green", "red"), name = "Type of house", labels = c("house","townhouse","unit"))
+```
+
+***
+CHALLENGE: Pick 3 CouncilAreas and make your own side by side boxplot. Use scale_fill_manual() to change the colours of the boxes and the labels.
+
+***
+
+##Facet grid
+
+```{r}
+houses %>%
+  filter(CouncilArea %in% c("Maribyrnong", "Melbourne")) %>%
+  ggplot() +
+  geom_boxplot(aes(y = Price, x = Type)) +
+  facet_grid(.~CouncilArea) 
+```
+
+Lets make this look better. First we can add titles.
+```{r}
+houses %>%
+  filter(CouncilArea %in% c("Maribyrnong", "Melbourne")) %>%
+  ggplot() +
+  geom_boxplot(aes(y = Price, x = Type)) +
+  scale_x_discrete(labels = c("House", "Townhouse", "Unit")) +
+  facet_grid(.~CouncilArea) +
+  labs(title = "title", y = "So expensve", x = "types")
+```
+
+***
+Challenge: Change the code so that we have price in million on the y axis. Then change x axis label so that it tells us the price is in millions.
+
+Hint: Make a new column with mutate that is the price in million.
+
+***
+
+#Saving plots
+So I like this plot and I want to save it. Show how to save plots in plots using Export.  
+Another way to save is to use pdf(). This is good if you are making 10 plots and you don't want to click through for each one. 
+```{r, eval=FALSE, echo=TRUE}
+pdf("myPlot.pdf", width = 10, height = 8)
+
+houses %>%
+  ggplot() +
+  geom_boxplot(aes(y = Price, x = Type)) 
+
+dev.off
+```
+
+##Bar plots
+Let's make bar plots now! 
+**%Whiteboard%** I want to plot mean price for each number of rooms. First I need to work out the mean price for each number of rooms. Which one of these would I use? 
+```{r}
+houses %>%
+  group_by(Bedroom2) %>%
+  summarise(meanPrice = mean(Price))
+```
+Lets plot this. Note that I send the data through to ggplot. 
+```{r, eval=FALSE, echo=TRUE}
+houses %>%
+  group_by(Bedroom2) %>%
+  summarise(meanPrice = mean(Price, na.rm = TRUE)) %>%
+  ggplot() + 
+    geom_bar(aes(y = meanPrice, x = Bedroom2))  
+```
+Why have we gotten this error??  
+Let's look at a bar plot that doesn't give an error.
+```{r}
+ggplot(houses) +
+  geom_bar(aes(x = Bedroom2))
+```
+What is this plot showing? y = number of houses that had 1 bedroom, 2bds....  
+What this function has done, is automatically counted how many houses/rows have 1 bd, 2 bd...  
+Notice how we only gave it 1 variable - because it's just counting up how many times there is a 1 bd house and putting the count herre - in the y axis.  
+Lets look at our previous data again. We are not plotting how many - we want it to plot actually this number here. We can tell it to do so with stat = "identity"
+```{r}
+houses %>%
+  group_by(Bedroom2) %>%
+  summarise(meanPrice = mean(Price, na.rm = TRUE)) %>%
+  ggplot() + 
+    geom_bar(aes(y = meanPrice, x = Bedroom2), stat = "identity")  
+```
+
+So I only want to look at houses that have 5 bedrooms or less - I'm a poor PhD student. Remember should I use == or %in%  ??
+
+```{r}
+houses %>%
+  filter(Bedroom2 %in% 0:5) %>%
+  group_by(Bedroom2) %>%
+  summarise(meanPrice = mean(Price, na.rm = TRUE)) %>%
+  ggplot() + 
+    geom_bar(aes(y = meanPrice, x = Bedroom2), stat = "identity") 
+
+```
+  
+Okay back to our plot. I want the ticks here for each bedroom.
+```{r}
+houses %>%
+  filter(Bedroom2 %in% 0:5) %>%
+  group_by(Bedroom2) %>%
+  summarise(meanPrice = mean(Price, na.rm = TRUE)) %>%
+  ggplot() + 
+    geom_bar(aes(y = meanPrice, x = Bedroom2), stat = "identity") +
+    scale_x_continuous(breaks = 0:5, labels = 0:5)
+#breaks mean the points at which the grid lines appear
+```
+
+***
+CHALLENGE: Make a side by side bar plot so for every bedroom number you have average price for each house Type.
+
+Hint: You will need to make a dataframe that shows mean price for each house type AND bedroom number then give this to ggplot.  
+Use position = "dodge" in geom_bar() to get the bars to be side by side
+Extra: Change the colours of the bars with scale_fill_manual()
+
+***
+
+```{r}
+houses %>%
+  filter(Bedroom2 %in% 0:5) %>%
+  group_by(Bedroom2, Type) %>%
+  summarise(meanPrice = mean(Price, na.rm = TRUE)) %>%
+  ggplot() + 
+    geom_bar(aes(y = meanPrice, x = Bedroom2, fill = Type), stat = "identity", position = "dodge") +
+    scale_x_continuous(breaks = 0:5, labels = 0:5)
+```
+
+This is not very good looking but you can change the labels and the colours if you want.  
+Now I want one of these plots for Brunswick. And I only want 1-3 bedrooms.
+```{r}
+houses %>%
+  filter(Bedroom2 %in% 1:3 & Suburb %in% c("Brunswick")) %>%
+  group_by(Bedroom2, Type) %>%
+  summarise(meanPrice = mean(Price, na.rm = TRUE) / 1000000) %>%
+  ggplot() + 
+    geom_bar(aes(y = meanPrice, x = Bedroom2, fill = Type), stat = "identity", position = "dodge") + 
+    labs(y = "price in millions") 
+```
+So that is 1 Suburb. What if I wanted to do this for a vector of Suburbs? I can write a for loop.
+
+***
+CHALLENGE: Write a for loop that will give you Price vs bedrooms (separated by house type) for 3 Suburbs. Add a title that states which Suburb the plot is for.
+Note when using ggplot in a for loop you have to specify that you want to print the plot with print().  
+i.e. print(
+``to make plot``
+)
+
+***
+
+```{r, eval=FALSE, echo=TRUE}
+for (i in coolSuburbs){
+print(
+  houses %>%
+  filter(Bedroom2 %in% 1:3 & Suburb %in% i) %>%
+  group_by(Bedroom2, Type) %>%
+  summarise(meanPrice = mean(Price, na.rm = TRUE) / 1000000) %>%
+  ggplot() + 
+    geom_bar(aes(y = meanPrice, x = Bedroom2, fill = Type), stat = "identity", position = "dodge") + 
+    labs(y = "price in millions", title = i) 
+  
+)
+}
+
+```
+
+You can save mulitple plots to one pdf file using pdf(). I want this plot for the suburbs I'm interested in. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+

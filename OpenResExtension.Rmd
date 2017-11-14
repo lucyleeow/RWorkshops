@@ -1,0 +1,197 @@
+---
+title: "OpenRes extension workshop"
+author: Lucy Liu
+output:
+  pdf_document: default
+  html_document: 
+    keep_md: true
+---
+
+#Data import
+Make new file. Download data from website - it is large csv 2 million rows so many take some time. Save to your new file. setwd() to be this directory.  
+
+```{r}
+peds <- read.csv("./Data/Pedestrian_volume__updated_monthly_.csv")
+```
+
+#Data cleaning
+This data is fairly clean. Are there any NA values?
+
+***
+CHALLENGE: Find out if there are any NA values in this dataset.
+
+Hint: you can use the function is.na()
+
+***
+
+```{r, eval=FALSE, echo=TRUE}
+sum(is.na(peds))
+```
+
+We can have a look at our data with
+```{r}
+str(peds)
+```
+ 
+Here we can see what data type R has labelled the columns. Which ones make sense?  
+DateTime does not make sense as factor. There is actually the data type date. Here we have Month, day of the week and time columns which make it really easy to use this data. If we only had the datetime column, it might be difficult to subset this data. Luckily there are the data types for date data, which makes it easier to deal with date data. When you have data that R has labelled as "date" you can do useful thing like find the number of dates between 2 dates, or the number hours!  
+Date is a data type for date data. We have date and time though! We need to use POXI
+
+***
+CHALLENGE: Change the Date_Time column to be of the data type POXIXct.
+
+Hint: as.POSIXct(peds$Date_Time, format = ")
+
+***
+
+```{r}
+peds$Date_Time <- as.POSIXct(peds$Date_Time, format = "%d-%b-%Y %H:%M")
+```
+
+#Data subsetting
+```{r, message=FALSE}
+library(dplyr)
+```
+
+Make new data frame with just the data from Fridays:
+```{r}
+fridaydata <- peds %>%
+  filter(Day == "Friday")
+```
+
+***
+CHALLENGE:
+1. Make a new dataframe with just data from the weekends.
+2. Make a new dataframe with data just from Friday at 6pm.
+3. Make a new dataframe with data just from the week days (i.e. NOT Saturday or Sunday). Hint: use "!"
+
+***
+
+```{r}
+weekend <- peds %>%
+  filter(Day %in% c("Saturday", "Sunday"))
+```
+
+```{r}
+weekend <- peds %>%
+  filter(Day == "Saturday" | Day == "Sunday")
+```
+
+```{r}
+friday <- peds %>%
+  filter(Day == "Friday", Time == 18)
+```
+
+```{r}
+weekday <- peds %>%
+  filter(! Day %in% c("Sunday", "Saturday"))
+```
+
+Use group_by and summarise. Show on board with grouping and how the number of rows == number of groups.
+```{r}
+peds %>%
+  group_by(Day) %>%
+  summarise(mean = mean(Hourly_Counts))
+```
+
+***
+CHALLENGE:
+1. Calculate the total number of counts for each day of the week.
+2. Calculate mean counts for each month.
+3. Calculate the mean counts on Fridays by location.
+
+***
+
+```{r}
+peds %>% 
+  filter(Day == "Friday") %>%
+  group_by(Sensor_Name) %>%
+  summarise(mean = mean(Hourly_Counts))
+```
+
+#Data visualisation
+```{r}
+library(ggplot2)
+```
+
+Let's start off by plotting the mean counts for each day of the week. Draw what plot looks like.
+```{r, eval=FALSE, echo=TRUE}
+peds %>%
+  group_by(Day) %>%
+  summarise(meancount =  mean(Hourly_Counts)) %>%
+ggplot() + 
+  geom_bar(aes(y = meancount, x = Day))
+```
+Does anyone know why I get an error?
+
+Okay to look at why lets just plot a bar graph where we don't get an error.
+```{r}
+ggplot(peds) +
+  geom_bar(aes(x = Month))
+```
+  
+What is this plotting???  
+We don't want this. We want it to plot the actual mean values we calculated. We add stat = "identity"
+```{r}
+peds %>%
+  group_by(Day) %>%
+  summarise(meancount =  mean(Hourly_Counts)) %>%
+ggplot() + 
+  geom_bar(aes(y = meancount, x = Day), stat = "identity")
+```
+
+***
+CHALLENGE: 
+1. How would you find all the unique sensor names?
+2. Plot the mean pedestrian counts for 5 sensor names.
+
+***
+
+Sensory locations:
+```{r}
+unique(peds$Sensor_Name)
+```
+
+```{r}
+levels(peds$Sensor_Name)
+```
+
+***
+CHALLENGE
+In what season is the mean pedestrian count highest in? Plot a bar graph to visualise any differences.
+
+***
+
+```{r}
+peds %>%
+  mutate(Season = ifelse(Month %in% c("January","February"), "Summer", ifelse(Month %in% c("March", "April", "May", "June", "July"), "Autumn", "Winter"))) %>%
+  group_by(Season) %>%
+  summarise(maen = mean(Hourly_Counts)) %>%
+  ggplot() + 
+  geom_bar(aes(y = maen, x = Season), stat = "identity")
+```
+
+#Plot locations
+If time at end?
+```{r, message=FALSE}
+#install.packages("ggmap")
+library(ggmap)
+```
+
+```{r}
+locations <- read.csv("./Data/Pedestrian_sensor_locations.csv")
+
+# Creating a sample data.frame with your lat/lon points
+locationdf <- data.frame(lon = locations$Longitude, lat = locations$Latitude)
+
+# getting the map
+mapgilbert <- get_map(location = c(lon = mean(locationdf$lon), lat = mean(locationdf$lat)), zoom = 14,
+                      maptype = "roadmap", scale = 2)
+
+# plotting the map with some points on it
+ggmap(mapgilbert) +
+  geom_point(data = locationdf, aes(x = lon, y = lat, fill = "red"), size = 2, shape = 21) +
+  guides(fill=FALSE, alpha=FALSE, size=FALSE) +
+  theme_void()
+```
+

@@ -26,7 +26,7 @@ ggplot(data = hp_data)
   
 1. Next we want to add a plot. We will make a bar graph by 'adding' another layer. We do this by putting a plus sign at the end, this tells R that we want to add another layer and there will be more instructions on the next line.
 2. The next 'layer' we will add is the graph. Different graphs are called "geoms" in ggplot. This is short for geometric object because a graph uses geometric objects to represent data. We want to add a bar plot so we will use "geom_col" - columns
-3. Now we need to tell R more details on how to make our bar plot. We need to tell it what goes on the x and y axes. To do this, first we add aes()  - "aesthetics"  - it is in here that we tell R how to make our plot. Within these round brackets we will tell R that on the X axis we want 'House' and on the y-axis we want "Percent", the percent of people that were sorted into that house
+3. Now we need to tell R more details on how to make our bar plot. We need to tell it what goes on the x and y axes. To do this, first we add aes()  - "aesthetics" - it is in here that we tell R how to make our plot. Within these round brackets we will tell R that on the X axis we want 'House' and on the y-axis we want "Percent", the percent of people that were sorted into that house
 
 ```{r}
 ggplot(data = hp_data) +
