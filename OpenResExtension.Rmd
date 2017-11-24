@@ -163,12 +163,26 @@ In what season is the mean pedestrian count highest in? Plot a bar graph to visu
 ***
 
 ```{r}
-peds %>%
-  mutate(Season = ifelse(Month %in% c("January","February"), "Summer", ifelse(Month %in% c("March", "April", "May", "June", "July"), "Autumn", "Winter"))) %>%
+a <- peds %>%
+  mutate(Season = ifelse(Month %in% c("December", "January","February"), "Summer", ifelse(Month %in% c("March", "April", "May"), "Autumn",                                ifelse(Month %in% c("June", "July", "August"), "Winter", "Spring")))) %>%
   group_by(Season) %>%
-  summarise(maen = mean(Hourly_Counts)) %>%
-  ggplot() + 
-  geom_bar(aes(y = maen, x = Season), stat = "identity")
+  summarise(mean1 = mean(Hourly_Counts), sdcount = sd(Hourly_Counts)) 
+
+
+a$sdcount <- c(23,45,35,34)
+
+  ggplot(a) + 
+  geom_bar(aes(y = mean1, x = Season), stat = "identity") +
+  geom_errorbar(aes(ymin = mean1 - sdcount, ymax = mean1 + sdcount))
+  
+  
+  
+df <- data.frame(a = c("a","b"), mean1 = c(23,25), sd = c(2,3))  
+  
+ggplot(df) +
+  geom_bar(aes(x = a, y = mean1), stat = "identity") +
+  geom_errorbar(aes(ymin = mean1 - sd, ymax = mean1 + sd, x = a), width = .2)
+
 ```
 
 #Plot locations
