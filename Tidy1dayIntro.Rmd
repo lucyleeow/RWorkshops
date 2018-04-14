@@ -1,0 +1,169 @@
+---
+title: "Introduction to R - 1 day with Tidyverse"
+author: Lucy Liu
+output:
+  pdf_document: default
+  html_document: 
+    keep_md: true
+---
+
+#Introduction to course
+
+1. Introduce self and helpers
+2. Who has used R before? Who has used a different programming language?
+3. Make sure everyone has R and RStudio
+4. Go over outline for the day - on website. Note that cannot teach R in just one day. The idea is for everyone to be able to get started and familiar with R. And have the confidence to look things up yourself.  
+5. All course notes are available online
+6. Google docs - there will be challenges to help you understand concepts. They are all in the google docs.
+
+##The 4 panels
+
+Introduce the 4 windows: Script editor, Console, Environment/History, Files/Plots/Help/packages.
+
+The first panel is the console. You can run commands here. 
+**Whiteboard**
+Commands/code = instructions for the computer. 
+Type in some maths and hit enter - runs the code. 
+You may notice one thing though. You can't click back up here and edit what you wrote, in case you mistyped. You also can't save any of your commands - so you can look at them later.
+
+This is where the top 'script editor' panel comes in. You can think about scripts as 'word' documents. A script is just a document with text - it's just that the text is code (instructions to the computer). You can make a new script %show% and this will be shown in this window. It is a good way to organise your work because you can save it - it will be a .r file - and refer to it or edit it later. If you haven't opened a script, I'll get you to open a new script and save it.  
+
+You can type some code here, then use Ctl/Cmd + Enter to make it run. E.g. 1+1.
+
+The code and the result pops up down here. The difference is that you can edit your command up here and run it again. 
+
+In this panel here you have your environment - you can see variables that you have created. For now just think of this panel has showing the data that you have input into R. In the next tab you have your History - you can look at the history of the code you have run. 
+
+Down here you have a few tabs. One of the most important is plots. This is where your graphs will pop out when you make them. 
+
+Another one is files. This is just like the directory of files in your computer. You can go up to see which folder you are in and click into different files - just like the file directory or file explorer on your computer. 
+
+There is a thing called your 'working directory' - which is an odd concept at first. This is where you are in your computer. When you start R, it starts it in a partcular location on your computer (e.g. under Lucy and my R folder). A working directory is where R will automatically look for files that you want to import (like your data) and it's where it will automatically save your graphs that you make.. We'll talk about this later and hopefully it will make more sense. 
+
+It's a good idea set your working directory to somewhere that makes sense. So let's do that. First make a folder for this workshop, somewhere on your computer - whatever makes sense for you - your desktop or home folder etc.
+
+Now lets make this folder your working directory. One way to do this to get the path to this folder (show in file explorer - here I am in lucy/documents/R....).
+Now use the command:
+
+```{r}
+#setwd("lucy/documents/R")
+```
+
+Your first challenge is to set your wd.
+
+***
+CHALLENGE: Make new folder and setwd to this folder
+
+***
+  
+##Useful tips
+
+###Cancelling commands
+Once you have ran your command, look at the output here. If you've done it right, it gives you an answer. And note the like arrow, greater than sign here. This means that it is ready to take your next command.
+
+If you ran a command and it gives you a plus - what do you think has happened here?
+You can see here that if you don't finish a command it will expect you to finish it - the plus here means that you haven't finished your command and it's waiting for you to finish your command. 
+
+You can either finish your command or press esc - which stops your command and returns the > - which means you can start writing a new command.
+
+###Comments
+You can also leave yourself comments using #. Anything after a # is ignored by R. For example running the command below - R ignores my comment.
+
+```{r}
+256 * 255 #doing some multiplication
+```
+
+##Variables
+**Whiteboard**
+
+There are two more concepts I will introduce before we get to the fun stuff and import some data. 
+
+The first is a variable. This is a little bit like  in algebra when we used letters like 'x' to represent numbers/values. A variable is just a thing that we have given a name to so we can refer to it later. For now, the thing is usually data like a number or a whole table of data like a excel spreadsheet.
+
+To make a variable - you just assign the name to it using <- and you tell R what data you want to save under that name. 
+
+(You might have also seen people use '='. It is almost the same but it's better practice in R to use <-)
+
+```{r}
+mydata <- 12
+mydata
+#what will happen if I do this?
+
+mydata <- 12 + 3
+#what does this give out
+mydata
+```
+
+Also notice that the variables come up here in your environment. This means its there for you to use.
+
+###Variable names
+R is a bit particular about the names you can give variables. The name can't start with a number or a punctuation mark and they can't contain spaces at all. What do you think R will do if I do this:?
+```{r, error=TRUE}
+2d <- 4
+my data <- 6
+```
+
+####Errors
+It will return an error.
+
+An error is when R cannot do what you asked it. It prints something out in red and it tries to tell you why it couldn't do what you asked it. Sometimes the message can be cryptic but you'll also get better at decoding these error messages. 
+
+Note that R also gives a warnings. A warning is when R could do what you asked it to - but it wants you to be careful of something. Often you can ignore warnings. 
+
+**whiteboard** error vs warnings.
+Error: R couldn't do what you asked it to do and you need to figure out why.
+Warning: R could do what you asked it to but be wary of something. Can be ignored often.
+
+##Functions
+**whiteboard** function = does something. name(input)
+The second concept to introduce are functions. A fuction is just something that does something.
+
+We have already used functions. setwd() was a function. It sets the working directory to be what you tell it.
+
+sum() is another function. What do you think it does?
+
+```{r}
+sum(3,4,65)
+```
+
+The names are pretty self explanatory.
+
+A function looks like this name(input). We call these arguments. 
+
+#Importing data
+
+Let's finally get to the fun stuff and import some data in.
+
+We will use the function read.csv(). Now what do you think we will need to put within the brackets?
+```{r}
+read.csv("https://docs.google.com/uc?id=1dNQpYWAIXReZpAaV0AeaiveyewX7SNTK&export=download")
+```
+
+I see my data has popped out down here. But it hasn't shown up here in the environment. Why not??
+
+```{r}
+data <- read.csv("https://docs.google.com/uc?id=1dNQpYWAIXReZpAaV0AeaiveyewX7SNTK&export=download")
+```
+
+You can see it has popped up here. This means that it has 'saved' it and I can use it again. You can click on it and have a look at it here.
+
+Your next challenge is to read the data in.
+
+***
+
+Take 10min break. Tea and coffee outside. The water cooler does give out hot water.
+
+***
+
+So we've all imported some data and we're feeling proud of ourselves. I just want to mention that you can also ask R to import a file from your computer. If you wanted to import a data file that was in your working directory - the input you give to read.csv() is then not a URL but the name of the file you want to import. 
+
+##Data structures
+
+
+
+
+
+
+
+
+
