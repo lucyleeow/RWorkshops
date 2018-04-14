@@ -1,3 +1,3 @@
 # ResBaz_CourseNotes
 
-Code to be used in Research Bazaar workshops/courses that I run.
+These are notes for the Research Bazaar R/RStudio workshops that I run at the University of Melbourne.
