@@ -14,7 +14,7 @@ output:
 3. Make sure everyone has R and RStudio
 4. Go over outline for the day - on website. Note that cannot teach R in just one day. The idea is for everyone to be able to get started and familiar with R. And have the confidence to look things up yourself.  
 5. All course notes are available online
-6. Google docs - there will be challenges to help you understand concepts. They are all in the google docs.
+6. Google docs - there will be challenges to help you understand concepts. They are all in the google docs. If you don't see this outline, click on view > show document outline.
 
 ##The 4 panels
 
@@ -98,7 +98,7 @@ Also notice that the variables come up here in your environment. This means its 
 
 ###Variable names
 R is a bit particular about the names you can give variables. The name can't start with a number or a punctuation mark and they can't contain spaces at all. What do you think R will do if I do this:?
-```{r, error=TRUE}
+```{r, eval=FALSE, echo=TRUE}
 2d <- 4
 my data <- 6
 ```
@@ -136,18 +136,46 @@ Let's finally get to the fun stuff and import some data in.
 
 We will use the function read.csv(). Now what do you think we will need to put within the brackets?
 ```{r}
-read.csv("https://docs.google.com/uc?id=1dNQpYWAIXReZpAaV0AeaiveyewX7SNTK&export=download")
+read.csv("https://docs.google.com/uc?id=1ceiVo36_wxBDsg4irC1FZg-t7LQKtyjI&export=download")
 ```
 
 I see my data has popped out down here. But it hasn't shown up here in the environment. Why not??
 
 ```{r}
-data <- read.csv("https://docs.google.com/uc?id=1dNQpYWAIXReZpAaV0AeaiveyewX7SNTK&export=download")
+house <- read.csv("https://docs.google.com/uc?id=1ceiVo36_wxBDsg4irC1FZg-t7LQKtyjI&export=download")
 ```
 
-You can see it has popped up here. This means that it has 'saved' it and I can use it again. You can click on it and have a look at it here.
+You can see it has popped up here. This means that it has 'saved as a variable' and I can use it again. You can click on it and have a look at it here.
 
 Your next challenge is to read the data in.
+
+Now that you have read it in, you can have a look at it by clicking.
+You can also use the $ to look at specific columns.
+
+I just want to mention that you can also ask R to import a file from your computer. You just have to put the file name here, instead of a URL.
+
+##read.csv() arguments
+
+There is a lot more to the read.csv function. There are many inputs to this function, which change the way that data is imported in.
+
+To learn more, we use the help function. If you want details about how to use any function, type in ? and then the function name (?read.csv) and you open the help file. It shows up in this panel and it is really useful. It is also really confusing when you start out. Don't worry you will get better at interpreting what this means.
+
+Let's have a look at the read.csv help file. The title is data input - this sounds good as read.csv inputs data into R. Under usage its got read.csv but it's also got a number of other functions - read.table, read.csv2. These are here because they are all closely related - as you can imagine they all import data into R. Let's ignore the others and just look at read.csv. In the brackets its got all the possible inputs (arguments) it can take. These arguments let you specify how the function read.csv will do its job. The first thing in the bracketss is file. This means that this is the first input (remember from functions on the whiteboard) it expects. It makes sense because R needs to know what data you want it to import. 
+
+If we scroll down, there is more detail on file.
+
+The next input (argument) is header. What does header mean? 
+A logical value - it can either be TRUE or FALSE.
+Can anyone interpret this?
+
+Now its your turn. 
+
+***
+
+Challenge:
+If your data file had each data point separated by ";" (show on google image), what read.csv argument would you have to use to read the data in?
+
+***
 
 ***
 
@@ -155,9 +183,178 @@ Take 10min break. Tea and coffee outside. The water cooler does give out hot wat
 
 ***
 
-So we've all imported some data and we're feeling proud of ourselves. I just want to mention that you can also ask R to import a file from your computer. If you wanted to import a data file that was in your working directory - the input you give to read.csv() is then not a URL but the name of the file you want to import. 
+#Data structures
 
-##Data structures
+We now need to learn about how our data is stored. 
+
+Data structures are containers for data - it's a way for R to store data. Unlike in excel, R has more rigid data containers. The 2 most often used are vectors and dataframes. 
+
+A dataframe holds 2D data (**whiteboard**) just like the data in your excel spreadsheet. R keeps track of the order of the data such that if you wanted the data in row 2, column 5, R can easily find it.
+
+Vector is 1D and it is just like a row or column in excel. It is also ordered. If you wanted the 5th element, R can easily find it.
+
+You can think of a dataframe as being composed of vectors.
+
+You can make your own vector easily with the function:
+```{r}
+vector <- c(1,2,3)
+```
+
+Now let's add another column to our data. We want to add a column that tells us how many bathrooms each of these houses has. 
+
+We can do this by first making a vector then adding it to our data frame. **whiteboard**
+
+How long does the vector have to be?
+
+***
+
+Challenge: make a vector called bathroom, which has 5 numbers in it
+
+***
+
+Now you can add it to the dataframe house using the function cbind:
+
+```{r}
+bathroom <- c(2,3,1,2,1,2,1)
+house <- cbind(house,bathroom)
+```
+
+#Data types
+
+The other important concept to learn is data types. 
+
+There are 5 basic data types in R and every bit of data in R is labelled as a certain data type. R will look at it and give it a label. 
+
+**Whiteboard**
+1. Logical TRUE or FALSE. What kind of data could be stored as TRUE or FALSE?  
+Next 3 are all numbers
+2. Integer. Number without a decimal point.
+3. Double. Number with a decimal point.
+4. Complex. Remember i - the imaginary number from maths? Numbers with i.
+5. Character. Sentences, words, letters. Always with quotes around it.
+
+In a dataframe, R expects that all the values in one column are going to be the same data type (numbers/words). In a vector, R expects all the data to be of the same data type.
+
+Note that it NEVER changes your data. If it is 45 it is always 45. 45 could be labelled as a number or it could force R to labeled it as a character, "45", but it is always 45. R just puts a label on it, so it knows what kind of data it is.
+
+It's important for R to know what kind of data it is. This tells R what it can and can't do with it. For example it knows it can't log a character. What else could it NOT do on a character.
+
+What could it do on a character data type and not on numbers? Search for a phrase e.g. find "street". 
+
+It also knows that adding a data labelled as a number to one labelled as character does not make sense. It also knows it can't take the log of data labelled as character. Can you think of something you can do with a character but not with numbers?
+
+You can find out how R has labeled your data using class(). 
+
+Let's look at a specific column. Can you remember how? 
+
+What do you think will be?
+```{r}
+class(house$Rooms)
+```
+
+***
+
+Challenge: use class() to find out what kind of datatype the column 'Address' is
+
+***
+
+It's not what we expect. What is a factor?
+
+A factor is another data type (not one of the basic ones) - it is used to store categorical data like red, blue, yellow or small, med, big. It is useful when the data is actually categorical because you can easily group the data into their categories (e.g. yellow, red, blue data) and perform functions - like taking the mean.
+
+Each category is a level. And you can see this using str().
+
+```{r}
+str(house$Address)
+```
+
+But why has it done this?? Well when importing data into R, it labels all character data type (words,sentences) as a factor.
+
+This is often annoying because in many cases like this one, characters are not factors. It can also be annoying to deal with data that is stored as factors. For example if I want to add another row:
+
+```{r}
+myhouse <- c("1 Park st", 3, 500000)
+rbind(house, myhouse)
+```
+
+It shows a warning. Can you remember what a warn is?
+
+Why have I gotten this? When R created this factor - it assumed that the all the possible categories were given to it. So it thinks that these addresses are factors (which they are not - they are not categorical data) and it thinks these 5 addresses are the only possible addresses. So it thinks values in this column can only be 25 bloomburg st etc... When we want to add another category it won't do it. This is annoying. The easiest way to solve this problem is to tell R not to make this column a factor when it reads in the data. We can always turn it into a factor later. 
+
+There is a setting in read.csv() that will makes R NOT label character columns as a factor.
+
+***
+
+Challenge: Use ?read.csv to figure out how to keep text columns as character vectors instead of factors. Then add another house (row) to our data using rbind(). Use the house details below: “1 Park st”, 3, 500000
+
+***
+
+Any questions? 
+
+#NA values
+
+The last thing we will talk about this morning is missing values. In R missing values are called NAs. You can see that in our data, we have a missing value here and when they entered the data they have just put the word missing. This is a NA value.
+
+When you read in the data, there is another input in read.csv(), that lets you specify what should be NA (999, xx). Remember that in the help file, the ... means that read.csv has all the same possible inputs/arguments as read.table - it just isn't written out for brevity.
+
+***
+
+Challenge. use ?read.csv to help you figure out what argument you need to set for R to label the word "missing" as NA.
+
+***
+
+
+```{r}
+house <- read.csv("https://docs.google.com/uc?id=1ceiVo36_wxBDsg4irC1FZg-t7LQKtyjI&export=download", stringsAsFactors = FALSE, na.strings = "missing")
+```
+
+Now that it is correctly coded as an NA, let's try to get the mean of prices. There is a handy function mean for that.
+
+How do we get just one column?
+
+```{r}
+mean(house$Price)
+```
+
+Why has this happened? R says that it does not know what the mean is because the mean of 100000, .... and a number i dont know, is I don't know! Because I don't know this number (which could thus be anything), R can't tell you what the mean is.
+
+You can tell the function mean to ignore NA values though.
+
+***
+
+Challenge: use ?mean to work out how to get the function mean to ignore NA values. Calculate the mean of the column price
+
+***
+
+What we covered:
+1. Variable
+2. Function and help
+3. Error vs warning
+4. Data structure (df and vector)
+5. Data type (5 basic and factor)
+6. NA
+
+Questions?
+
+***
+
+Challenge: install dplyr and ggplot
+
+
+***
+
+```{r}
+#install.packages("dplyr")
+#install.packages("ggplot2")
+
+#library(dplyr)
+#library(ggplot2)
+```
+
+**LUNCH BREAK**
+
+
+
 
 
 

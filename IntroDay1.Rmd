@@ -44,8 +44,15 @@ CHALLENGE: Make new folder and setwd to this folder
 
 ***
   
+##Useful tips
+
 ###Cancelling commands
-You can see here that if you don't finish a command it will expect you to finish it - the plus here means that you haven't finished your command. You can either finish your command or press esc - which stops your command and returns the > - which means you can start writing a new command.
+Once you have ran your command, look at the output here. If you've done it right, it gives you an answer. And note the like arrow, greater than sign here. This means that it is ready to take your next command.
+
+If you ran a command and it gives you a plus - what do you think has happened here?
+You can see here that if you don't finish a command it will expect you to finish it - the plus here means that you haven't finished your command and it's waiting for you to finish your command. 
+
+You can either finish your command or press esc - which stops your command and returns the > - which means you can start writing a new command.
 
 ###Comments
 You can also leave yourself comments using #. Anything after a # is ignored by R. For example running the command below - R ignores my comment.
@@ -141,7 +148,9 @@ people <- c(3,4,5)
 ```
 
 ***
-CHALLENGE: Use c() to make a vector of the names of the people on your table.
+
+CHALLENGE: 
+Use c() to make a vector of the names of the people on your table.
 
 ***
 
