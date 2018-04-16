@@ -262,10 +262,11 @@ It's not what we expect. What is a factor?
 
 A factor is another data type (not one of the basic ones) - it is used to store categorical data like red, blue, yellow or small, med, big. It is useful when the data is actually categorical because you can easily group the data into their categories (e.g. yellow, red, blue data) and perform functions - like taking the mean.
 
-Each category is a level. And you can see this using str().
+Each category is a level. And you can see this using str(). You can see all the possible categories (levels).
 
 ```{r}
 str(house$Address)
+levels(house$Address)
 ```
 
 But why has it done this?? Well when importing data into R, it labels all character data type (words,sentences) as a factor.
@@ -353,14 +354,399 @@ Challenge: install dplyr and ggplot
 
 **LUNCH BREAK**
 
+#New data
+Let's take our training wheels off and use the whole set of data. We want to read it in.
 
+***
 
+Challenge: Read in the data from the new URL. Remember we don’t want strings to be labelled as factors
 
+***
 
+```{r}
+house <- read.csv("https://docs.google.com/uc?id=1wdSyZZ3U4tqMfgCKin7ogpTKaQ9gAc4t&export=download", stringsAsFactors = FALSE)
+```
 
+The NA's have automatically been recorded. Why is that? If a cell/data point (in your original data) that is empty, it will automatically be recorded as NA.
 
+Now I can see that there are lots of NA values. I'm going to remove them all with a function called na.omit. What is going to happen here?
+```{r}
+house <- na.omit(house)
+```
 
+Let's have a look at the new data. The explanation is at the end of the google doc.
 
+#DPLYR
 
+We are going to start to do some interesting things with our data now. We will use a package called dplyr. It's written by the chief scientist of RStudio - Hadley Wickham. It's very useful and intuitive for manipulating our data.
+
+This package uses the %>% 'pipe' notation. You can think of it as send your data through a pipe. You start with your data (we've have called it house) and we pipe it to our next function where we might pick out some columns, then we might change the data in some way. The idea is that the data gets these functions performed on them sequentially.
+
+##Select
+
+Let's start with the function select. **whiteboard**
+
+You use it like this. What do you think this will do? It's made a new data frame.
+```{r, eval=FALSE, echo=TRUE}
+house %>%
+  select(Address, Rooms)
+```
+
+***
+
+Challenge: Use select() to make a new data frame with only the columns Address and Landsize. Assign this new dataframe as a variable called 'selectHouse'.
+
+***
+
+##Filter
+Filter lets you pick which rows you want. (select: columns, filter: rows)
+
+You use it like this: What do you think is going to happen here?
+```{r, eval=FALSE, echo=TRUE}
+house %>%
+  filter(Rooms == 2)
+```
+
+Why do we use == and not =?
+Remember how I said at the start that = pretty much does the same thing as <-
+So what = does is that it assigns a something to a variable. This data is called "house".
+
+What == does is that it compares things. Here it looks through the rows and checks if Rooms is equal to 2, if it is, that row is kept and if it isn't we don't keep that row.
+
+***
+
+Challenge: Make a new dataframe with just the columns Postcode and Distance and just the rows where the Distance is 2.5.
+
+***
+
+```{r, eval=FALSE, echo=TRUE}
+house %>%
+  select(Postcode, Distance) %>%
+  filter(Distance == 2.5)
+```
+
+***
+
+Challenge: Make a new dataframe with just the columns Rooms and Address and just the rows where the Type is 'h'
+
+***
+
+What's happened here? Remember when I said R does this in sequence. If we have selected just the columns Rooms and Address and then there is no column called Type - thus we can't pick just the rows where Type is 'h'. We have to pick the rows first and then select. 
+
+```{r, eval=FALSE, echo=TRUE}
+house %>%
+  filter(Type == 'h') %>%
+  select(Rooms)
+```
+
+What if we wanted the rows where Type is either 'h' or 't'?
+We can't do this:
+```{r, eval=FALSE, echo=TRUE}
+house %>%
+  filter(Type == 'h' or 't')
+```
+R doesn't understand human language. We have to tell it specifically in this way:
+
+```{r, eval=FALSE, echo=TRUE}
+
+house %>%
+  filter(Type %in% c('h','t'))
+```
+
+What this means is the Type has to be one of the things %in% here.
+
+***
+
+Challenge: Make a new dataframe with the columns Landsize and Postcode and the rows where the Suburb is "Carlton North" or "Parkville".
+
+***
+
+##group_by and summarise
+
+The next functions we'll learn about are group_by and summarise (write on whiteboard). These are great when you use them together. What will this do?
+
+```{r, eval=FALSE, echo=TRUE}
+house %>%
+  group_by(Suburb) %>%
+  summarise(mean = mean(Price))
+```
+
+Group by groups the rows so all the Abbotsford ones are together and all the Carlton ones are together. Summarise lets you summarise one group (e.g. the Abborstford group). Here we have worked out the mean Price. 
+
+How many rows does this new dataframe have? It only has 300 rows because there are 300 Suburbs altogether. Ther is now only 1 number for each Suburb - the mean price. And the name of this column we decided here.
+
+Let's add another column. I want to know how many houses are in each suburb as well. What do you think I should do?
+```{r, eval=FALSE, echo=TRUE}
+house %>%
+  group_by(Suburb) %>%
+  summarise(mean = mean(Price), number = n())
+```
+
+***
+
+Challenge: Find the mean price for the houses in each CouncilArea and the total number of houses in each CouncilArea
+Find the mean Landsize for the houses in each Suburb
+
+***
+
+##Mutate
+
+Mutate creates a new column.
+
+What do you think will happen here?
+```{r, eval=FALSE, echo=TRUE}
+house %>%
+  select(Address) %>%
+  mutate(newcol = 'hello')
+```
+
+So it creates a new column and I can put anything I want in it. This isn't very useful. 
+We have YearBuilt here. What if we another column with the age of the house - 2018-yearbuilt.
+
+What do you think we would do?
+```{r, eval=FALSE, echo=TRUE}
+house %>%
+  mutate(age = 2018 - YearBuilt) %>%
+  select(age, YearBuilt)
+```
+
+***
+
+Challenge: Create another column with the mean price in millions (e.g. 1 instead of 1000000)
+
+**
+
+**Take a 10min break after this**
+
+#ggplot
+
+We are finally on to ggplot! It is one of the most popular packages in R. It was written by the same person that wrote dplyr and these 2 packages work well together as we will see later. 
+
+**Whiteboard**
+This is how to give instructions to R to tell it to make plots.
+
+Let's make a scatter plot of Landsize vs yearbuilt. What do I start with? What should I put here?
+
+So it doesn't look great. I don't really want to focus on this part of the graph. I can do that. Any further instructions are added on. Remember, like in dplyr, R looks at these instructions in sequence. Remember to give your instructions in the right order.
+
+```{r, eval=FALSE, echo=TRUE}
+ggplot(house, aes(x = YearBuilt, y = Landsize)) +
+  geom_point() + 
+  coord_cartesian(xlim = c(1800,2050), ylim = c(0,10000))
+```
+
+***
+
+CHALLENGE: Make a scatter plot of Landsize vs Price Change the coordinates of the y and x axis until you can visualise the data better.
+
+***
+
+***
+
+Challenge: Add a line to your scatter plot of Landsize vs YearBuilt using geom_smooth()
+
+***
+
+```{r}
+ggplot(house, aes(x = Landsize, y = Price)) +
+  geom_point() +
+  geom_smooth() +
+  coord_cartesian(xlim = c(0,2000))
+```
+
+##Boxplot
+```{r}
+ggplot(houses) + 
+  geom_boxplot(aes(y = Price, x = Type))
+```
+
+***
+CHALLENGE: Make a boxplot of Price for each CouncilArea
+
+***
+
+We can't really read the labels. To fix this we can switch the axis.
+```{r}
+ggplot(houses) + 
+  geom_boxplot(aes(y = Price, x = CouncilArea)) +
+  coord_flip()
+```
+So this is getting a bit messy. We are only interested in some areas anyway. We can combine dplyr (the select and filter we were using before) with ggplot.  
+We start filtering using
+```{r, eval=FALSE, echo=TRUE}
+houses %>%
+  filter(CouncilArea %in% c("Maribyrnong", "Melbourne"))
+```
+Should I use == or %in% ?????
+
+If you remember from subsetting. What will this give me?
+```{r}
+vector1 <- 1:10
+vector1 %in% 0:5
+```
+What will this give me?
+```{r}
+vector1
+0:5
+vector1 == 0:5
+```
+Back to our plot. Note how I am sending the data - think of data flowing through these pipes - to ggplot. I dont have to specify what data I am using because it is being sent in from here.
+```{r}
+houses %>%
+  filter(CouncilArea %in% c("Maribyrnong", "Melbourne")) %>%
+  ggplot() +
+  geom_boxplot(aes(y = Price, x = CouncilArea))
+```
+
+We can also do a side by side boxplot. Say for every CouncilArea, we want to know the price for each type of house we just have to add fill = Type to aesthetics.
+```{r}
+houses %>%
+  filter(CouncilArea %in% c("Maribyrnong", "Melbourne")) %>%
+  ggplot() +
+  geom_boxplot(aes(y = Price, x = CouncilArea, fill = Type))
+```
+  
+```{r}
+houses %>%
+  filter(CouncilArea %in% c("Maribyrnong", "Melbourne")) %>%
+  ggplot() +
+  geom_boxplot(aes(y = Price, x = CouncilArea, fill = Type)) +
+  scale_fill_manual(values = c("pink", "green", "red"), name = "Type of house", labels = c("house","townhouse","unit"))
+```
+
+***
+CHALLENGE: Pick 3 CouncilAreas and make your own side by side boxplot. Use scale_fill_manual() to change the colours of the boxes and the labels.
+
+***
+
+##Facet grid
+
+```{r}
+houses %>%
+  filter(CouncilArea %in% c("Maribyrnong", "Melbourne")) %>%
+  ggplot() +
+  geom_boxplot(aes(y = Price, x = Type)) +
+  facet_grid(.~CouncilArea) 
+```
+
+Lets make this look better. First we can add titles.
+```{r}
+houses %>%
+  filter(CouncilArea %in% c("Maribyrnong", "Melbourne")) %>%
+  ggplot() +
+  geom_boxplot(aes(y = Price, x = Type)) +
+  scale_x_discrete(labels = c("House", "Townhouse", "Unit")) +
+  facet_grid(.~CouncilArea) +
+  labs(title = "title", y = "So expensve", x = "types")
+```
+
+***
+Challenge: Change the code so that we have price in million on the y axis. Then change x axis label so that it tells us the price is in millions.
+
+Hint: Make a new column with mutate that is the price in million.
+
+***
+
+#Saving plots
+So I like this plot and I want to save it. Show how to save plots in plots using Export.  
+Another way to save is to use pdf(). This is good if you are making 10 plots and you don't want to click through for each one. 
+```{r, eval=FALSE, echo=TRUE}
+pdf("myPlot.pdf", width = 10, height = 8)
+
+houses %>%
+  ggplot() +
+  geom_boxplot(aes(y = Price, x = Type)) 
+
+dev.off
+```
+
+##Bar plots
+Let's make bar plots now! 
+**%Whiteboard%** I want to plot mean price for each number of rooms. First I need to work out the mean price for each number of rooms. Which one of these would I use? 
+```{r}
+houses %>%
+  group_by(Bedroom2) %>%
+  summarise(meanPrice = mean(Price))
+```
+Lets plot this. Note that I send the data through to ggplot. 
+```{r, eval=FALSE, echo=TRUE}
+houses %>%
+  group_by(Bedroom2) %>%
+  summarise(meanPrice = mean(Price, na.rm = TRUE)) %>%
+  ggplot() + 
+    geom_bar(aes(y = meanPrice, x = Bedroom2))  
+```
+Why have we gotten this error??  
+Let's look at a bar plot that doesn't give an error.
+```{r}
+ggplot(houses) +
+  geom_bar(aes(x = Bedroom2))
+```
+What is this plot showing? y = number of houses that had 1 bedroom, 2bds....  
+What this function has done, is automatically counted how many houses/rows have 1 bd, 2 bd...  
+Notice how we only gave it 1 variable - because it's just counting up how many times there is a 1 bd house and putting the count herre - in the y axis.  
+Lets look at our previous data again. We are not plotting how many - we want it to plot actually this number here. We can tell it to do so with stat = "identity"
+```{r}
+houses %>%
+  group_by(Bedroom2) %>%
+  summarise(meanPrice = mean(Price, na.rm = TRUE)) %>%
+  ggplot() + 
+    geom_bar(aes(y = meanPrice, x = Bedroom2), stat = "identity")  
+```
+
+So I only want to look at houses that have 5 bedrooms or less - I'm a poor PhD student. Remember should I use == or %in%  ??
+
+```{r}
+houses %>%
+  filter(Bedroom2 %in% 0:5) %>%
+  group_by(Bedroom2) %>%
+  summarise(meanPrice = mean(Price, na.rm = TRUE)) %>%
+  ggplot() + 
+    geom_bar(aes(y = meanPrice, x = Bedroom2), stat = "identity") 
+
+```
+  
+Okay back to our plot. I want the ticks here for each bedroom.
+```{r}
+houses %>%
+  filter(Bedroom2 %in% 0:5) %>%
+  group_by(Bedroom2) %>%
+  summarise(meanPrice = mean(Price, na.rm = TRUE)) %>%
+  ggplot() + 
+    geom_bar(aes(y = meanPrice, x = Bedroom2), stat = "identity") +
+    scale_x_continuous(breaks = 0:5, labels = 0:5)
+#breaks mean the points at which the grid lines appear
+```
+
+***
+CHALLENGE: Make a side by side bar plot so for every bedroom number you have average price for each house Type.
+
+Hint: You will need to make a dataframe that shows mean price for each house type AND bedroom number then give this to ggplot.  
+Use position = "dodge" in geom_bar() to get the bars to be side by side
+Extra: Change the colours of the bars with scale_fill_manual()
+
+***
+
+```{r}
+houses %>%
+  filter(Bedroom2 %in% 0:5) %>%
+  group_by(Bedroom2, Type) %>%
+  summarise(meanPrice = mean(Price, na.rm = TRUE)) %>%
+  ggplot() + 
+    geom_bar(aes(y = meanPrice, x = Bedroom2, fill = Type), stat = "identity", position = "dodge") +
+    scale_x_continuous(breaks = 0:5, labels = 0:5)
+```
+
+This is not very good looking but you can change the labels and the colours if you want.  
+Now I want one of these plots for Brunswick. And I only want 1-3 bedrooms.
+```{r}
+houses %>%
+  filter(Bedroom2 %in% 1:3 & Suburb %in% c("Brunswick")) %>%
+  group_by(Bedroom2, Type) %>%
+  summarise(meanPrice = mean(Price, na.rm = TRUE) / 1000000) %>%
+  ggplot() + 
+    geom_bar(aes(y = meanPrice, x = Bedroom2, fill = Type), stat = "identity", position = "dodge") + 
+    labs(y = "price in millions") 
+```
 
 

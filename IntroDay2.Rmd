@@ -355,9 +355,9 @@ CHALLENGE: Make a scatter plot of Landsize vs YearBuilt. Change the coordinates 
 ***
 
 ```{r}
-ggplot(houses) +
+ggplot(house) +
   geom_point(aes(y = Landsize, x = YearBuilt)) +
-  coord_cartesian(xlim = c(1700,2150), ylim = c(0,10000))
+  coord_cartesian(xlim = c(1800,2150), ylim = c(0,10000))
 ```
 
 ##Boxplot
