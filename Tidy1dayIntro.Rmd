@@ -142,7 +142,8 @@ read.csv("https://docs.google.com/uc?id=1ceiVo36_wxBDsg4irC1FZg-t7LQKtyjI&export
 I see my data has popped out down here. But it hasn't shown up here in the environment. Why not??
 
 ```{r}
-house <- read.csv("https://docs.google.com/uc?id=1ceiVo36_wxBDsg4irC1FZg-t7LQKtyjI&export=download")
+house <- read.csv(
+  "https://docs.google.com/uc?id=1ceiVo36_wxBDsg4irC1FZg-t7LQKtyjI&export=download")
 ```
 
 You can see it has popped up here. This means that it has 'saved as a variable' and I can use it again. You can click on it and have a look at it here.
@@ -214,8 +215,8 @@ Challenge: make a vector called bathroom, which has 5 numbers in it
 
 Now you can add it to the dataframe house using the function cbind:
 
-```{r}
-bathroom <- c(2,3,1,2,1,2,1)
+```{r, eval=FALSE, echo=TRUE}
+bathroom <- c(2,3,1,2,1)
 house <- cbind(house,bathroom)
 ```
 
@@ -306,7 +307,8 @@ Challenge. use ?read.csv to help you figure out what argument you need to set fo
 
 
 ```{r}
-house <- read.csv("https://docs.google.com/uc?id=1ceiVo36_wxBDsg4irC1FZg-t7LQKtyjI&export=download", stringsAsFactors = FALSE, na.strings = "missing")
+house <- read.csv(
+  "https://docs.google.com/uc?id=1ceiVo36_wxBDsg4irC1FZg-t7LQKtyjI&export=download", stringsAsFactors = FALSE, na.strings = "missing")
 ```
 
 Now that it is correctly coded as an NA, let's try to get the mean of prices. There is a handy function mean for that.
@@ -348,8 +350,8 @@ Challenge: install dplyr and ggplot
 #install.packages("dplyr")
 #install.packages("ggplot2")
 
-#library(dplyr)
-#library(ggplot2)
+library(dplyr)
+library(ggplot2)
 ```
 
 **LUNCH BREAK**
@@ -364,7 +366,9 @@ Challenge: Read in the data from the new URL. Remember we don’t want strings t
 ***
 
 ```{r}
-house <- read.csv("https://docs.google.com/uc?id=1wdSyZZ3U4tqMfgCKin7ogpTKaQ9gAc4t&export=download", stringsAsFactors = FALSE)
+house <- read.csv(
+  "https://docs.google.com/uc?id=1wdSyZZ3U4tqMfgCKin7ogpTKaQ9gAc4t&export=download", 
+stringsAsFactors = FALSE)
 ```
 
 The NA's have automatically been recorded. Why is that? If a cell/data point (in your original data) that is empty, it will automatically be recorded as NA.
@@ -554,60 +558,78 @@ ggplot(house, aes(x = Landsize, y = Price)) +
   coord_cartesian(xlim = c(0,2000))
 ```
 
-##Boxplot
+You can change how the line is drawn. The default one is just a line that fits the data. Other optoms are lm (linear model), glm (general linear model).
+
 ```{r}
-ggplot(houses) + 
-  geom_boxplot(aes(y = Price, x = Type))
+ggplot(house, aes(x = Landsize, y = Price)) +
+  geom_point() +
+  geom_smooth(method = lm) +
+  coord_cartesian(xlim = c(0,2000))
+```
+
+##Boxplot
+
+Let's move on to Boxplots. 
+
+```{r}
+ggplot(house, aes(y = Price, x = Type)) + 
+  geom_boxplot()
 ```
 
 ***
+
 CHALLENGE: Make a boxplot of Price for each CouncilArea
 
 ***
 
 We can't really read the labels. To fix this we can switch the axis.
 ```{r}
-ggplot(houses) + 
+ggplot(house) + 
   geom_boxplot(aes(y = Price, x = CouncilArea)) +
   coord_flip()
 ```
+
 So this is getting a bit messy. We are only interested in some areas anyway. We can combine dplyr (the select and filter we were using before) with ggplot.  
-We start filtering using
+We start filtering using:
+
 ```{r, eval=FALSE, echo=TRUE}
-houses %>%
+house %>%
   filter(CouncilArea %in% c("Maribyrnong", "Melbourne"))
 ```
-Should I use == or %in% ?????
 
-If you remember from subsetting. What will this give me?
+I can send this data to ggplot. From here it passes it to ggplot. Usually I have to tell ggplot what data I am plotting but here I don't as it is getting the data piped in from here.
+
+Do note that with dplyr you use %>% but with ggplot you need to use +.
 ```{r}
-vector1 <- 1:10
-vector1 %in% 0:5
-```
-What will this give me?
-```{r}
-vector1
-0:5
-vector1 == 0:5
-```
-Back to our plot. Note how I am sending the data - think of data flowing through these pipes - to ggplot. I dont have to specify what data I am using because it is being sent in from here.
-```{r}
-houses %>%
+house %>%
   filter(CouncilArea %in% c("Maribyrnong", "Melbourne")) %>%
-  ggplot() +
-  geom_boxplot(aes(y = Price, x = CouncilArea))
+  ggplot(aes(y = Price, x = CouncilArea)) +
+  geom_boxplot()
 ```
 
-We can also do a side by side boxplot. Say for every CouncilArea, we want to know the price for each type of house we just have to add fill = Type to aesthetics.
+We can add another variable to out plot. We do this by plotting a side by side boxplot.
+
+Say for every CouncilArea, we want to know the price for each type of house.
+**whiteboard** this is the plot that we want.
+
+We just have to add fill = Type to aesthetics.
 ```{r}
-houses %>%
+house %>%
   filter(CouncilArea %in% c("Maribyrnong", "Melbourne")) %>%
   ggplot() +
   geom_boxplot(aes(y = Price, x = CouncilArea, fill = Type))
 ```
-  
+
+***
+
+Challenge: Pick 3 CouncilAreas and make your own side by side boxplot
+
+***
+
+We can also change the colour. These are the default ones. scale_fill_manual lets us specify what the legend will look like.
+
 ```{r}
-houses %>%
+house %>%
   filter(CouncilArea %in% c("Maribyrnong", "Melbourne")) %>%
   ggplot() +
   geom_boxplot(aes(y = Price, x = CouncilArea, fill = Type)) +
@@ -615,30 +637,44 @@ houses %>%
 ```
 
 ***
-CHALLENGE: Pick 3 CouncilAreas and make your own side by side boxplot. Use scale_fill_manual() to change the colours of the boxes and the labels.
+CHALLENGE: Use scale_fill_manual() to change the colours of the boxes and the labels.
 
 ***
 
 ##Facet grid
 
+We can also separate out these plots using something called facets.
+
+How do I start.
+
 ```{r}
-houses %>%
+house %>%
   filter(CouncilArea %in% c("Maribyrnong", "Melbourne")) %>%
   ggplot() +
   geom_boxplot(aes(y = Price, x = Type)) +
   facet_grid(.~CouncilArea) 
 ```
+What does the .~ mean?
+Here you tell it what should be faceted vertical ~ horizontal.
 
-Lets make this look better. First we can add titles.
+Lets make this look better. First we can add titles using scale_x_discrete and labs
+
 ```{r}
-houses %>%
+house %>%
   filter(CouncilArea %in% c("Maribyrnong", "Melbourne")) %>%
   ggplot() +
   geom_boxplot(aes(y = Price, x = Type)) +
-  scale_x_discrete(labels = c("House", "Townhouse", "Unit")) +
   facet_grid(.~CouncilArea) +
-  labs(title = "title", y = "So expensve", x = "types")
+  scale_x_discrete(labels = c("House", "Townhouse", "Unit")) +
+  labs(title = "title", y = "So expensive", x = "types")
 ```
+
+***
+
+Challenge: Add labels to your plot using scale_x_discrete() and labs()
+
+***
+
 
 ***
 Challenge: Change the code so that we have price in million on the y axis. Then change x axis label so that it tells us the price is in millions.
@@ -648,7 +684,9 @@ Hint: Make a new column with mutate that is the price in million.
 ***
 
 #Saving plots
+
 So I like this plot and I want to save it. Show how to save plots in plots using Export.  
+
 Another way to save is to use pdf(). This is good if you are making 10 plots and you don't want to click through for each one. 
 ```{r, eval=FALSE, echo=TRUE}
 pdf("myPlot.pdf", width = 10, height = 8)
@@ -661,10 +699,11 @@ dev.off
 ```
 
 ##Bar plots
+
 Let's make bar plots now! 
 **%Whiteboard%** I want to plot mean price for each number of rooms. First I need to work out the mean price for each number of rooms. Which one of these would I use? 
 ```{r}
-houses %>%
+house %>%
   group_by(Bedroom2) %>%
   summarise(meanPrice = mean(Price))
 ```
@@ -679,7 +718,7 @@ houses %>%
 Why have we gotten this error??  
 Let's look at a bar plot that doesn't give an error.
 ```{r}
-ggplot(houses) +
+ggplot(house) +
   geom_bar(aes(x = Bedroom2))
 ```
 What is this plot showing? y = number of houses that had 1 bedroom, 2bds....  
@@ -687,7 +726,7 @@ What this function has done, is automatically counted how many houses/rows have 
 Notice how we only gave it 1 variable - because it's just counting up how many times there is a 1 bd house and putting the count herre - in the y axis.  
 Lets look at our previous data again. We are not plotting how many - we want it to plot actually this number here. We can tell it to do so with stat = "identity"
 ```{r}
-houses %>%
+house %>%
   group_by(Bedroom2) %>%
   summarise(meanPrice = mean(Price, na.rm = TRUE)) %>%
   ggplot() + 
@@ -697,7 +736,7 @@ houses %>%
 So I only want to look at houses that have 5 bedrooms or less - I'm a poor PhD student. Remember should I use == or %in%  ??
 
 ```{r}
-houses %>%
+house %>%
   filter(Bedroom2 %in% 0:5) %>%
   group_by(Bedroom2) %>%
   summarise(meanPrice = mean(Price, na.rm = TRUE)) %>%
@@ -708,7 +747,7 @@ houses %>%
   
 Okay back to our plot. I want the ticks here for each bedroom.
 ```{r}
-houses %>%
+house %>%
   filter(Bedroom2 %in% 0:5) %>%
   group_by(Bedroom2) %>%
   summarise(meanPrice = mean(Price, na.rm = TRUE)) %>%
@@ -728,7 +767,7 @@ Extra: Change the colours of the bars with scale_fill_manual()
 ***
 
 ```{r}
-houses %>%
+house %>%
   filter(Bedroom2 %in% 0:5) %>%
   group_by(Bedroom2, Type) %>%
   summarise(meanPrice = mean(Price, na.rm = TRUE)) %>%
@@ -740,7 +779,7 @@ houses %>%
 This is not very good looking but you can change the labels and the colours if you want.  
 Now I want one of these plots for Brunswick. And I only want 1-3 bedrooms.
 ```{r}
-houses %>%
+house %>%
   filter(Bedroom2 %in% 1:3 & Suburb %in% c("Brunswick")) %>%
   group_by(Bedroom2, Type) %>%
   summarise(meanPrice = mean(Price, na.rm = TRUE) / 1000000) %>%
@@ -749,4 +788,13 @@ houses %>%
     labs(y = "price in millions") 
 ```
 
+What we covered:
+1. Dplyr - key functions
+2. ggplot - how to make a plot
+
+Any questions?
+
+Please fill out survey. Happy to hear your comments.
+
+Would any of you be interested in attending a meetup next month, where you can talk about any problems you have with using R on your own data? 
 
