@@ -3,7 +3,7 @@ title: "IntroDay2"
 author: Lucy Liu
 output:
   pdf_document: default
-  html_document: 
+  html_document:
     keep_md: true
 ---
 
