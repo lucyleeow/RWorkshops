@@ -40,7 +40,7 @@ Does anyone remember how to do this?
 Install the packages and save and read in the data and save as a variable called 'patients'.
 ***
 
-```{r, echo=TRUE, eval=FALSE}
+```{r,  echo=TRUE, eval=FALSE}
 patients <- read.csv("patients.txt")
 library(dplyr)
 library(ggplot2)
