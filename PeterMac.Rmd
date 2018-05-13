@@ -3,8 +3,6 @@ title: "Workshop #3: dplyr & ggplot"
 author: Lucy Liu
 output:
   pdf_document: default
-  html_document: 
-    keep_md: true
 ---
 
 #Introduction
@@ -40,7 +38,7 @@ Does anyone remember how to do this?
 Install the packages and save and read in the data and save as a variable called 'patients'.
 ***
 
-```{r,  echo=TRUE, eval=FALSE}
+```{r}
 patients <- read.csv("patients.txt")
 library(dplyr)
 library(ggplot2)
@@ -56,7 +54,7 @@ You can think about this as a pipe, that sends data through to the next function
 The select() function let's you select columns in your data.
 
 The dplyr function is fairly intuitive. What do you think happens when I do this?
-```{r, echo=TRUE, eval=FALSE}
+```{r,  eval=FALSE, echo=TRUE}
 patients %>%
   select(Name)
 ```
@@ -70,19 +68,19 @@ patients %>%
 ```
 
 What if I did this?
-```{r, echo=TRUE, eval=FALSE}
+```{r,  eval=FALSE, echo=TRUE}
 patients %>%
   select(-Name) %>%
   head()
 ```
 What if I did this?
-```{r, echo=TRUE, eval=FALSE}
+```{r,  eval=FALSE, echo=TRUE}
 patients %>%
   select(Name:Sex) %>%
   head()
 ```
 What if I did this?
-```{r, echo=TRUE, eval=FALSE}
+```{r,  eval=FALSE, echo=TRUE}
 patients %>%
   select(ends_with("t")) %>%
   head()
@@ -102,13 +100,13 @@ patients %>%
 ```
 
 What happens if I do this?
-```{r, echo=TRUE, eval=FALSE}
+```{r,  eval=FALSE, echo=TRUE}
 patients %>%
   filter(Name != 'Michael') %>%
   head()
 ```
 What if I do this?
-```{r, echo=TRUE, eval=FALSE}
+```{r,  eval=FALSE, echo=TRUE}
 patients %>%
   filter(Sex == 'Male', Pet == 'Dog') %>%
   head()
@@ -116,7 +114,7 @@ patients %>%
 You can also use & here. It is exactly the same as a comma.
 
 What if I do this?
-```{r, echo=TRUE, eval=FALSE}
+```{r,  eval=FALSE, echo=TRUE}
 patients %>%
   filter(Height > '170' | Pet == 'Dog') %>%
   head()
@@ -124,7 +122,7 @@ patients %>%
 Does anyone know what | means? Does everyone know where | is?
 
 What if I do this?
-```{r, echo=TRUE, eval=FALSE}
+```{r,  eval=FALSE, echo=TRUE}
 patients %>%
   filter(Pet %in% c("Dog", "Bird")) %>%
   head()
@@ -138,7 +136,7 @@ The reason is a bit complicated but if you are interested you can ask one of our
 
 Now what if I did this?
 
-```{r, echo=TRUE, eval=FALSE}
+```{r,  eval=FALSE, echo=TRUE}
 patients %>%
   filter(Pet %in% c("Dog", "Bird")) %>%
   select(Name:Sex) %>%
@@ -150,7 +148,7 @@ We'll learn about 1 other function and then we'll go to a challenge.
 
 Mutate creates new columns.
 You use it like this:
-```{r, echo=TRUE, eval=FALSE}
+```{r,  eval=FALSE, echo=TRUE}
 patients %>%
   mutate(height_in_m = Height/100) %>%
   head()
@@ -165,7 +163,7 @@ Challenge
 Now you may have noticed something funny about the last challenge. R performs these functions in sequence - so it does this one first and then this.
 
 In the last challenge if you selected just the columns name and sex, you end up with a dataframe that is just like this:
-```{r, echo=TRUE, eval=FALSE}}
+```{r, echo=TRUE, eval=FALSE}
 patients %>%
   select(Name, Sex) %>%
   head()
