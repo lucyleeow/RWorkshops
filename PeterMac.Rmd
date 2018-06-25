@@ -6,37 +6,28 @@ output:
 ---
 
 #Introduction
-We are going to learn about 2 packages in R called dplyr and ggplot. We call R by itself 'base R' and it comes with a lot of functions. You can also add to these functions by installing packages - you can think of this as like installing apps on your phone - it adds extra functions.
+The contents of this workshop are adapted from the University of Cambirdge [Bioinformatics training](https://bioinfotraining.bio.cam.ac.uk/) workshop ["Data Manipulation and Visualisation using R"](http://bioinformatics-core-shared-training.github.io/r-intermediate/)
 
-The dplyr package gives you functions for manipulating your data - like what we did last week with square brackets where we subsetted part of our data. The ggplot package gives you functions for making plots and it is one of the most popular packages! They were both written by the same person and they work well together.
+This section is on the R packages 'dplyr' and 'ggplot.' 
 
-##Shared doc
-We are going to use this shared google doc for today. It can be found at the url.
-First, if you don't see this outline panel, click View > show document outline.
+Base R: We call R by itself (without adding any packages) 'base R'. It comes with a lot of functions but you can also add to these functions by installing packages. You can think of this as like installing apps on your phone - it adds extra functions.
 
-All the notes for what I am covering today can be found here. I am not going to cover everything here but if you are interested you can go through these in your own time. 
+Packages: You can think of packages as a bundle of functions. The 'dplyr' package is a bundle of functions for manipulating your data. The 'ggplot' is a bundle of functions for making plots and it is one of the most popular packages! They were both written by the same person and they work well together.
 
-#Installation and data import
-To start off with we are going to install these 2 packages and import the data that we will play with today.
+#Package installation 
+You need to install packages first before you use them. To install a package that you have not used before requires 2 steps:
 
-##Installation
-There are 2 steps to installing a package.
+1. install.packages('dplyr') - This command downloads the package onto your computer (if you are using the server, you don't need to do this as it would already have been done). You only need to do this ONCE.
+2. library('dplyr') - This command 'opens' this package up and you need to do this every time you open up R. People using the server you will need to use this command.
 
-This command install.packages downloads the package onto your computer (if you are using the server, you don't need to do this as it would already have been done). You only need to do this once.
+#Data import
+The data that we are using today can be found [here](https://github.com/bioinformatics-core-shared-training/r-intermediate/blob/master/patient-data-cleaned.txt). 
+It's important to have a look at the data before you import it. Ahat symbol is separating each data value and which command should you use to import the data?
 
-The command library 'opens' this package up and you need to do this every time you open up R. People using the server you will need to use this command.
+To import the data:
 
-##Data import
-The data that we are using today can be found here. First, let's take a look at it - what symbol is separating each data value?? 
-What command can you use to read this in (there are several options).
-
-So I want you to save the data as a text file - give it a name - and put it in the folder where you have been putting all your workshop things. Remember this folder because we are also going to set this folder as our working directory.
-
-Does anyone remember how to do this?
-
-***
-Install the packages and save and read in the data and save as a variable called 'patients'.
-***
+1. Save the data as a text file into your working directory.
+2. Import your data into R. 
 
 ```{r}
 patients <- read.csv("patients.txt")
@@ -44,68 +35,61 @@ library(dplyr)
 library(ggplot2)
 ```
 
-We can now have a look at our data. It is a dataframe (recall a dataframe is a data structure - a container for our dat. It is 2D - it has row and columns and just like an excel file)
-
 #DPLYR
 A vital function in dplyr is called the 'pipe' %>%
-You can think about this as a pipe, that sends data through to the next function. We'll use the function select to demonstrate this.
+You can think about this as a pipe, that sends data through to the next function. We'll use the function select() to demonstrate this.
 
-#Select
+##select
 The select() function let's you select columns in your data.
-
-The dplyr function is fairly intuitive. What do you think happens when I do this?
 ```{r,  eval=FALSE, echo=TRUE}
 patients %>%
   select(Name)
 ```
-What happening here, is that we start with our data, which we have 'saved' as a variable called patients, we are piping the data to the first function called select which selects columns. 
+What's happening here, is that we start with our data, the variable called 'patients', we are piping the data to the first function called select() which is selecting just the column named 'Name'. 
 
-What if I did this?
-```{r, echo=TRUE, eval=FALSE}
-patients %>%
-  select(Name)%>%
-  head()
-```
-
-What if I did this?
+To select all columns apart from Name:
 ```{r,  eval=FALSE, echo=TRUE}
 patients %>%
   select(-Name) %>%
   head()
 ```
-What if I did this?
+You can also get columns within a particular range. This code below selects all columns between Name and Sex.
 ```{r,  eval=FALSE, echo=TRUE}
 patients %>%
   select(Name:Sex) %>%
   head()
 ```
-What if I did this?
+We can also use ends_with() to select all columns whose name ends with "t".
 ```{r,  eval=FALSE, echo=TRUE}
 patients %>%
   select(ends_with("t")) %>%
   head()
 ```
 
-***
-Challenge
-***
+##Exercise: select()
+
+1. Select all the columns between Height and Grade_Level
+2. Select all the columns between Height and Grade_Level, but NOT Pet
+3. Select the columns Height and Weight
 
 ##Filter
-filter() function let's you filter for certain rows.
+filter() function let's you choose rows from the data frame. We can use the comparison operators ==, >, < and != to help use choose the rows we want.
 
+To choose all the rows where the patient is male we say that we want the Sex column to be equal (==) to 'Male', like this:
 ```{r, echo=TRUE, eval=FALSE}
 patients %>%
   filter(Sex == 'Male') %>%
   head()
 ```
 
-What happens if I do this?
+To choose all the rows where the patient's name is NOT 'Michael', we say that we want the Name column to not be equal to (!=) 'Michael': 
 ```{r,  eval=FALSE, echo=TRUE}
 patients %>%
   filter(Name != 'Michael') %>%
   head()
 ```
-What if I do this?
+
+To choose all the rows where the patient is Male and their Pet is a Dog we do this:
 ```{r,  eval=FALSE, echo=TRUE}
 patients %>%
   filter(Sex == 'Male', Pet == 'Dog') %>%
@@ -113,142 +97,136 @@ patients %>%
 ```
 You can also use & here. It is exactly the same as a comma.
 
-What if I do this?
+To choose all the rows where the patient's height is above 170 or (symbol for or is '|') their pet is a dog, we use:
 ```{r,  eval=FALSE, echo=TRUE}
 patients %>%
   filter(Height > '170' | Pet == 'Dog') %>%
   head()
 ```
-Does anyone know what | means? Does everyone know where | is?
 
-What if I do this?
+To choose all the rows where the patient's pet is EITHER a dog or a bird we use:
 ```{r,  eval=FALSE, echo=TRUE}
 patients %>%
   filter(Pet %in% c("Dog", "Bird")) %>%
   head()
 ```
-The %in% function finds matches. So it is looks for all the rows where under Pets, is Dog or bird.
+The %in% function finds matches. It looks for all the rows where the column Pets, matches Dog or bird.
 
-Recall we used '==' earlier. The difference is that you use '==' when you are looking for 1 thing, e.g. just rows with dog. 
-Use %in% when you are looking for more than one thing, e.g. rows with dog and bird
+Note that there is a difference between %in% and ==
+This:
+```{r}
+patients %>%
+  filter(Pet %in% c("Dog", "Bird"))
+```
+will not return the same result as this:
+```{r}
+patients %>%
+  filter(Pet == c("Dog", "Bird"))
+```
 
-The reason is a bit complicated but if you are interested you can ask one of our lovely helpers in the break.
+The tip is, when you are looking for more than one thing (e.g. pet is either dog or birth), use %in%. When you are looking for only one thing (e.g. pet is a dog), use ==.
 
-Now what if I did this?
-
+You can combine select and filter together like this:
 ```{r,  eval=FALSE, echo=TRUE}
 patients %>%
   filter(Pet %in% c("Dog", "Bird")) %>%
   select(Name:Sex) %>%
   head()
 ```
+This first chooses the rows where the patient's pet is a dog or a bird and then selects the columns from Name to Sex.
 
-##Mutate
-We'll learn about 1 other function and then we'll go to a challenge.
 
-Mutate creates new columns.
-You use it like this:
+##mutate
+mutate() allows you to create a new column and add it to the end of your data frame.
+
+We can make a new column where the height is in metres instead of centimetres. We have given our new column the name "height_in_m" (we can name this anything that we choose) and we have specified that we want the number in the height column divided by 100.
 ```{r,  eval=FALSE, echo=TRUE}
 patients %>%
   mutate(height_in_m = Height/100) %>%
   head()
 ```
 
-I've created a new column. It's added to the end and the name of it is what I have given it here. I can change this and it would change the name of the column.
+##Challenge: mutate and select
 
-***
-Challenge
-***
+1. Create a new column called BMI which gives the BMIs of all the patients 
+2. Choose the rows where the overweight (BMI>25) smokers that are still alive
+3. Choose the rows where the Female patients from New York or New Jersey 
+4. Choose the columns Name and Sex and the rows where patients are overweight and smokers 
 
-Now you may have noticed something funny about the last challenge. R performs these functions in sequence - so it does this one first and then this.
-
-In the last challenge if you selected just the columns name and sex, you end up with a dataframe that is just like this:
-```{r, echo=TRUE, eval=FALSE}
-patients %>%
-  select(Name, Sex) %>%
-  head()
-```
-You don't have the other columns so you can't can't filter for the rows where BMI is >25 say.
-
-An easy way to fix this is to first filter the rows where BMI is >25 and smokes is TRUE and then to select the columns.
+Remember that the order you get R to perform the functions matters. 
 
 ##group_by & summarise
-These 2 functions are really useful and you generally want to use them together. 
+The group_by() and summarise() functions are very useful when you use them together. They allow you to compute summary statistics for selected columns in our dataset.
+
 Let's first look at what summarise does by itself.
 ```{r, echo=TRUE, eval=FALSE}
 patients %>%
   summarise(mean_height = mean(Height))
 ```
-It's taken all the heights and given us the mean.
+It's taken all the heights and given us the mean. Note that it returns just one number.
 
-Now let's have a look at what it does when you use it with group_by.
+Now let's have a look at what it does when you use it with group_by:
 ```{r, echo=TRUE, eval=FALSE}
 patients %>%
   group_by(Sex) %>%
   summarise(mean_height = mean(Height))
 ```
-So it's group the rows into the males and females, and then it has given us the mean height for each group.
+It groups the rows into males and females, and then it has given us the mean height for each group. Note that it returns two numbers as there were two groups.
 
-What if I did this?
+You can calculate more than one summary statistic as well. Below we are grouping our patients by sex and race (there are 2 sexes and 4 difference races, thus we have 8 groups in total) and then calculating the mean height and weight for each group. Note that we will get 8 numbers because there are 8 groups.
 ```{r, echo=TRUE, eval=FALSE}
 patients %>%
   group_by(Sex, Race) %>%
   summarise(mean_height = mean(Height), mean_weight = mean(Weight))
 ```
 
-Let's get on to some challenges but first I just want to show you something useful.
+##Challenge: group_by & summarise
 
+1. Use summarise to find the mean height and weight of patients in the patients dataset.
+2. Find the mean weight of male and female patients from each state
+3. Find the proportion of patients of each sex AND smoking status that are deceased
+
+Hint: TRUE's are stored as the number 1 and FALSE's are stored as the number 0 in R. Thus if we create a vector of TRUE's and FALSE's and then take the mean, we get the proportion of TRUE's in the vector.
 ```{r, echo=TRUE, eval=FALSE}
 a <- c(TRUE, FALSE, FALSE, TRUE, TRUE)
 mean(a)
 ```
 
-What has it done? Remember that Trues and falses are stored as 1's and 0's in R. 1 is TRUE and 0 is FALSE. So it is taking the average of Trues - 60% of these are TRUE's.
-
-This will help you with the challenges.
-
-***
-Challenge
-***
-
-Add BMI to your data!
-```{r}
+##Prepare data for ggplot
+For ggplot, we will use the original data we started with and add a BMI column to the end. We will use this dataframe to make plots with ggplot.
+```{r, echo=TRUE, eval=FALSE}
 patients <- patients %>%
   mutate(BMI = Weight/(Height/100)^2)
 ```
 
+#ggplot
+ggplot is one of the most popular packages in R. The default parameters usually make sense and the default graph is generally quite nice looking. 
 
-***
-BREAK
-***
+Let's start with the basic anatomy of ggplot code - or how to you give R the instructions to make your plot. 
+First you must tell ggplot what data you want to plot. Then using the aes (which stands for "aesthetics"), you tell ggplot how to make your graph (i.e. what is on the x and y axis). Finally you tell ggplot what type of plot you want. Note the plus between ggplot and the geom 
 
-#GGPLOT
-ggplot is one of the most popular packages in R and you can make nice looking plots with it.
-
-Let's start with the basic anatomy of ggplot code - this is how you give R the instructions to make your plot.
-The plus is important.
-
-So if I wanted a scatter plot of height on y and weight on x - how would I do this?
-```{r}
+For example, let's make a scatter plot first. 
+We first tell ggplot that we want to plot the dataframe 'patients', that we want weight to be on the x axis and height on the y and that we want a scatter plot ('geom_point').
+```{r, echo=TRUE, eval=FALSE}
 library(ggplot2)
 ggplot(patients, aes(x=Weight, y=Height)) +
   geom_point()
 ```
 
-Now there are a few other things that we can add to aes here - this means that we can add extra variables to our scatter plot.
-They are (show notes page) size, shape and colour. 
+For a scatter plot are a few other things that we can add to aes. This means that we can add extra variables to our scatter plot.
+They are size, shape and colour. 
 
-What do you think will happen here?
+colour changes the colours of the points according to the Sex column of our dataframe.
 ```{r}
 ggplot(patients, aes(x=Weight, y=Height, colour = Sex)) +
   geom_point()
 ```
 
-***
-Challenge
-***
+##Challenge: ggplot scatter plot
 
-Now let's have some fun with difference types of plots.
+Recreate this plot:
+![](plots/)
+
 
 
 
