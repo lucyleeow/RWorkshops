@@ -1,6 +1,6 @@
 # R/Rstudio workshops
 
-These are notes and lesson plans for R/Studio workshops that I have run. 
+These are notes and lesson plans for R/RStudio workshops that I have run. 
 
 * ResBaz - these are based off [Nikki Rubinstein's](https://twitter.com/nikkirubinstein) workshop guide which can be found [here](https://nikkirubinstein.gitbooks.io/resguides-introductory-r-workshop/content/content/01-rstudio-intro.html).
   + IntroDay1 and IntroDay2 are lesson plans for the parts of the 2-day introduction to R workshop workshop I taught. 
