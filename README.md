@@ -2,8 +2,8 @@
 
 These are notes and lesson plans for R/RStudio workshops that I have run. 
 
-* ResBaz - these are based off [Nikki Rubinstein's](https://twitter.com/nikkirubinstein) workshop guide which can be found [here](https://nikkirubinstein.gitbooks.io/resguides-introductory-r-workshop/content/content/01-rstudio-intro.html).
-  + IntroDay1 and IntroDay2 are lesson plans for the parts of the 2-day introduction to R workshop workshop I taught. 
+* ResBaz - lesson plans from when I worked as the R/RStudio community coordinator at [Research Bazaar](http://melbourne.resbaz.edu.au/). 
+  + IntroDay1 and IntroDay2 are lesson plans for the parts of the 2-day introduction to R workshop workshop I taught. These are based off [Nikki Rubinstein's](https://twitter.com/nikkirubinstein) workshop guide which can be found [here](https://nikkirubinstein.gitbooks.io/resguides-introductory-r-workshop/content/content/01-rstudio-intro.html).
   + Tidy1dayIntro contains lesson plans for a 1-day introduction to R workshop. 
   + [OpenRes](https://resbaz.github.io/OpenRes/) was a 'guided hackathon' event ran by Research Bazaar. The notes were for a short workshop I ran during the event.
   + ResPitch is a short 30min introduction (taster) to R I gave at the 2017 Melbourne Research Bazaar conference.
