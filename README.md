@@ -8,4 +8,4 @@ These are notes and lesson plans for R/RStudio workshops that I have run.
   + [OpenRes](https://resbaz.github.io/OpenRes/) was a 'guided hackathon' event ran by Research Bazaar. The notes were for a short workshop I ran during the event.
   + ResPitch is a short 30min introduction (taster) to R I gave at the 2017 Melbourne Research Bazaar conference.
 * Peter Mac - these are based off the Cambridge [Data Manipulation and Visualisation using R](http://bioinformatics-core-shared-training.github.io/r-intermediate/) materials. The lesson materials were adapted so it could be taught in one half day.
-* WEHIDay4 - these are based off the Introduction to R workshops [Brendan Ansell](https://github.com/bansell) designed. The entire course was taught over 4 x half days and I taught the last workshop.
+* WEHIDay4 - WEHI ran it's first Introduction to R workshop, lead by [Brendan Ansell](https://github.com/bansell). The entire course was taught over 4 x half days. I taught the last workshop. The lesson plan was designed by Brendan and I just added my own notes.
