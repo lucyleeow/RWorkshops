@@ -1,0 +1,109 @@
+---
+title: "WEHI Introduction to R - Week 4"
+author: Lucy Liu
+output:
+  pdf_document: default
+  html_document: 
+    keep_md: true
+---
+
+```{r}
+library(knitr)
+opts_chunk$set(message=FALSE)
+```
+
+This lesson and all the code was written by [Brendan Ansell](https://github.com/bansell) - I have just added my own teaching notes.
+
+# Tidy data
+Go over tidy data. Each column is a variable (you can think of as thing that was measured) and each row is an observations.
+
+We learnt about 2 functions 
+
+* one takes our data from wide to long - what was the name? gather
+* the other long to wide - what was the name? spread
+
+Questions?
+
+# Join
+Cover the join() function in the slides.
+Ask what they expect to get when using join on the Marvel dataframe.
+
+## Practice
+Now we are going to practice using join.
+
+Brendan sent around the link to download the data. Did anyone have trouble - let the helpers know. This is what your data should look like in your computer - navigate to folder and set working directory. 
+We want to set our working directory - this means that R will look here by default to import data and save any plots or tables we produce goes here by default.
+
+Let's read in our data. Does anyone remember the function?
+```{r}
+# first load library
+library(tidyverse)
+```
+
+```{r}
+# Note how R helps us. 
+GO_list <- read_csv("Week4_biolData/GO_join/GO_list.csv")
+GO_entrez <- read_csv("Week4_biolData/GO_join/GO_entrez.csv")
+Hs_annot <- read_csv("Week4_biolData/GO_join/Hs_annot.csv")
+GO_desc <- read_csv("Week4_biolData/GO_join/GO_desc.csv")
+```
+
+Let's have a look at our dataframes. 
+
+* GO_list is just 1 column with 5 GO terms
+* GO_entrez has all the GO terms, and gives the matching entrez gene IDs
+* Hs_annot has all the entrez gene IDs and gives the matching gene name and description
+* GO_desc gives us the description of all the GO terms
+
+What we want to do now, is add all of this information to our dataframe of just 5 GO terms.
+
+Let's add the matching entrez gene ID's first.
+
+Which join should I use?
+Which dataframes do I want to join? 
+
+```{r, eval==FALSE}
+left_join(GO_list, GO_entrez)
+```
+
+Now how to I save this as a variable so it comes up here (envir) and I can use it later?
+```{r}
+GO_entrezJoin <- left_join(GO_list, GO_entrez)
+```
+
+Now our code worked because there is a column called go_id in both GO_list and GO_entrez and they are spelt exactly the same. 
+
+If we want to join 2 dataframes but the columns we want to join them with do not match, we have to specifically tell R this.
+
+What is the column that we want to join by here?
+```{r, eval=FALSE}
+left_join(GO_entrezJoin, Hs_annot, by = c("entrez_id" = "ENTREZID"))
+```
+
+Now how do I save this as a variable?
+
+```{r}
+GO_entrez_genename <- left_join(GO_entrezJoin, Hs_annot, by = c("entrez_id" = "ENTREZID"))
+```
+
+
+***
+
+Challenge: Join the GO_entrez_genename dataframe to GO_desc
+
+***
+
+# Save image
+(skip if necessary)
+
+
+# For loops
+
+
+
+
+
+
+
+
+
