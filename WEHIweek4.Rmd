@@ -40,7 +40,7 @@ Let's read in our data. Does anyone remember the function?
 library(tidyverse)
 ```
 
-```{r, eval==FALSE}
+```{r, eval=FALSE}
 # Note how R helps us. 
 GO_list <- read_csv("Week4_biolData/GO_join/GO_list.csv")
 GO_entrez <- read_csv("Week4_biolData/GO_join/GO_entrez.csv")
@@ -62,12 +62,12 @@ Let's add the matching entrez gene ID's first.
 Which join should I use?
 Which dataframes do I want to join? 
 
-```{r, eval==FALSE}
+```{r, eval=FALSE}
 left_join(GO_list, GO_entrez)
 ```
 
 Now how to I save this as a variable so it comes up here (envir) and I can use it later?
-```{r, eval==FALSE}
+```{r, eval=FALSE}
 GO_entrezJoin <- left_join(GO_list, GO_entrez)
 ```
 
@@ -82,7 +82,7 @@ left_join(GO_entrezJoin, Hs_annot, by = c("entrez_id" = "ENTREZID"))
 
 Now how do I save this as a variable?
 
-```{r, eval==FALSE}
+```{r, eval=FALSE}
 GO_entrez_genename <- left_join(GO_entrezJoin, Hs_annot, by = c("entrez_id" = "ENTREZID"))
 ```
 
@@ -114,7 +114,7 @@ You start with the word for, then brackets. Here is the name for the thing that 
 Now we need curly brackets and here, is the body of the for loop - we tell it what to do at every loop.
 
 Let's have a look at an example. First do you remember what this gives us?
-```{r, eval==FALSE}
+```{r, eval=FALSE}
 1:5
 ```
 
@@ -262,7 +262,7 @@ plate_clean %>%
 
 How would I be able to find the median value of signal? There are a few ways to do it.
 ```{r, eval=FALSE}
-plate_clean %>% summarize(median=median(signal))
+plate_clean %>% summarize(median=median(Signal))
 ```
 
 Now let's save our graph! We will make a folder called "plate_analysis" and then save things to here!
@@ -350,7 +350,7 @@ Remember to save as variable.
 ```{r}
 plate_zScores <- plateTagged %>%
   filter(wellTag == "test") %>% 
-  mutate(z_score = (signal - ctrl_metrics$mean_negCTRL) / ctrl_metrics$sd_negCTRL)
+  mutate(z_score = (Signal - ctrl_metrics$mean_negCTRL) / ctrl_metrics$sd_negCTRL)
 ```
 
 Now we are going to say hits are ones where the z score is greater than 4 or less than -4 (multiple testing).
@@ -363,7 +363,7 @@ hits <- plate_zScores %>%
 ```
 
 Write it out to a csv file. Function is write_csv - what do you think we need to tell it??
-```{r}
+```{r, eval=FALSE}
 write_csv(hits, path = "plate_analysis/hits_plate1.csv")
 ```
 
