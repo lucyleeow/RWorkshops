@@ -169,6 +169,11 @@ What about this? Now do you remember what this gives us?
 paste("Number", 1:5)
 ```
 
+Paste as a sep argument. What do you think this will do?
+```{r}
+paste("Number", 1:5, sep = "-")
+```
+
 -- See slides
 Let's use it in a for loop. We have some scientists here working out what the saying is. And we just want to make a for loop so they don't have to write the whole thing out every time.
 
