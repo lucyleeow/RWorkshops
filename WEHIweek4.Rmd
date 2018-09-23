@@ -40,7 +40,7 @@ Let's read in our data. Does anyone remember the function?
 library(tidyverse)
 ```
 
-```{r}
+```{r, eval==FALSE}
 # Note how R helps us. 
 GO_list <- read_csv("Week4_biolData/GO_join/GO_list.csv")
 GO_entrez <- read_csv("Week4_biolData/GO_join/GO_entrez.csv")
@@ -67,7 +67,7 @@ left_join(GO_list, GO_entrez)
 ```
 
 Now how to I save this as a variable so it comes up here (envir) and I can use it later?
-```{r}
+```{r, eval==FALSE}
 GO_entrezJoin <- left_join(GO_list, GO_entrez)
 ```
 
@@ -82,7 +82,7 @@ left_join(GO_entrezJoin, Hs_annot, by = c("entrez_id" = "ENTREZID"))
 
 Now how do I save this as a variable?
 
-```{r}
+```{r, eval==FALSE}
 GO_entrez_genename <- left_join(GO_entrezJoin, Hs_annot, by = c("entrez_id" = "ENTREZID"))
 ```
 
@@ -96,14 +96,293 @@ Challenge: Join the GO_entrez_genename dataframe to GO_desc
 # Save image
 (skip if necessary)
 
+If you want to save everything here (envir) - all the objects that you have created, you can use the save.image() function. All you have to tell it, is what you want to name the file. It ends with Rdata.
+
+So if I open a new RStudio without all these objects or I delete them all (this sweeping broom here does this), I can load all my objects again using load().
+```{r, eval=FALSE}
+save.image(file="myEnv_objects.Rdata")
+
+
+load("myEnv_objects.Rdata")
+```
 
 # For loops
+For loops are an important programming concept and it's present in pretty much all programming languages. The idea is that you can tell the computer to repeat the same task many times without typing the command many times.
+
+--show structure of for loop on whiteboard--
+You start with the word for, then brackets. Here is the name for the thing that will change at every loop - we can call it anything but we just have to name it so we can refer to it later. Here is the vector (remember a vector is just a ordered list of things - like a column in excel) that tells the for loop how many times to run and what this here changes to every time.
+Now we need curly brackets and here, is the body of the for loop - we tell it what to do at every loop.
+
+Let's have a look at an example. First do you remember what this gives us?
+```{r, eval==FALSE}
+1:5
+```
+
+What do you think will happen if I run this code? 
+```{r}
+for (i in 1:5){
+  
+  print(i)
+  
+}
+```
+
+So how many times has the for loop run? Why? 
+
+What if I do this? So I create a vector like this:
+```{r}
+helpers <- c("Anna", "Quentin","luyi","luke")
+```
+
+What happens if I do this? Which part of the for loop tells it what i is every time?
+```{r, eval=FALSE}
+for (i in helpers){
+  
+  print(i)
+}
+```
+
+What happens if I do this?
+```{r, eval=FALSE}
+for (i in helpers){
+  
+  print(name)
+}
+
+```
+
+Let's make it a little interesting with the paste function. Now how can I get help on a function?
+You just type in ? and the function name and the help page will come up. Let's see what help says. Generally the help pages are hard to understand but you will get used to it.
+
+What do you think this will do?
+```{r}
+paste("hello","world")
+
+```
+
+What about this? Now do you remember what this gives us?
+```{r, eval=FALSE}
+1:5
+```
+
+```{r}
+paste("Number", 1:5)
+```
+
+-- See slides
+Let's use it in a for loop. We have some scientists here working out what the saying is. And we just want to make a for loop so they don't have to write the whole thing out every time.
+
+Now what is the thing that is changing every time? 
+Which part of the for loop tells what i changes to each time? Remember how I made a vector of names here - now I need to make a vector of 'liquids' and put that in the for loop. 
+
+***
+
+Challenge: Get R to print this out in a for loop
+
+***
+
+tea break?? - write on board the dplyr functions, filter, select, mutate, summarise
+
+# Compound plates
+We're going to come back to our for loop at the end but now we're going to loop at some compound screening data (go to slides).
+
+I know very little about this so excuse my lack of science - the experiment involves a 1584 well plate. A different compound is put in each well and we get an intensity value for each well, which tells us how many cells there are - I think its basically a measure of cell death. Big number means cells are alive and small number means the cells have died.
+
+Let's read the data in. What function does this?
+```{r}
+plate <- read_csv("Week4_biolData/screening_plates/plate1.csv")
+```
+
+This is great but it's not 'tidy' data. We want every row to be ONE observation. What function can we use to turn this data into tidy data?
+
+We want our data to look like R1, C1 number....
+Which columns do we want to gather? Now what do we want to call these column names?
+```{r, eval=FALSE}
+plate %>%
+  gather(2:49, key = "Col", value = "Signal")
+```
+
+This is great - but we have to do this annoying thing to plot it. We have to remove the R and the C from the row and col columns for plotting. Any idea why? The reason is that it wouldn't be in the correct order. When you plot it it would order R1, R10, R11... because it want to put it in alphabetical order.
+
+```{r}
+plate %>%
+  gather(2:49, key = "Col", value = "Signal") %>%
+  mutate(ROW = str_remove(ROW, "R")) %>%
+  mutate(ROW = as.integer(ROW))
+```
+
+***
+
+Challenge: Now I want you to do the same with the col column - remove the c and turn it into an integer data type. Then save it as a variable called "plate_clean"
+
+*** 
 
 
+This looks good - it's doing what we want. Now how to I save this as a variable so I can refer to it again?
+```{r}
+plate_clean <- plate %>%
+  gather(2:49, key = "Col", value = "Signal") %>%
+  mutate(ROW = str_remove(ROW, "R")) %>%
+  mutate(ROW = as.integer(ROW)) %>%
+  mutate(Col = str_remove(Col, "C")) %>%
+  mutate(Col = as.integer(Col))
+```
+
+Now let's plot all these numbers on a graph.
+```{r}
+plate_clean %>%
+  ggplot(aes(x=Col, y=ROW, fill=Signal)) +
+  geom_tile(col="grey")
+```
+
+This is great! But we want row 1 to be up here, to match our plate. To do this we add:
+```{r, eval=FALSE}
+
+plate_clean %>%
+  ggplot(aes(x=Col, y=ROW, fill=Signal)) +
+  geom_tile(col="grey") +
+  scale_y_reverse() 
+
+```
+
+You may have noticed the colours aren't that different. If we wanted different intensities to pop, we set the colour gradient - instead of being light blue to dark blue, we could go blue to white to red - where signals around the median are white.
+
+```{r}
+plate_clean %>%
+  ggplot(aes(x=Col, y=ROW, fill=Signal)) +
+  geom_tile(col="grey") +
+  scale_y_reverse() +
+  scale_fill_gradient2(low="blue",mid="white",high="red", midpoint = 2e5)
+```
+
+How would I be able to find the median value of signal? There are a few ways to do it.
+```{r, eval=FALSE}
+plate_clean %>% summarize(median=median(signal))
+```
+
+Now let's save our graph! We will make a folder called "plate_analysis" and then save things to here!
+```{r, eval=FALSE}
+ggsave("plate_analysis/signal_plate1.pdf", width=8, height = 5)
+```
+
+Nearly at the end now. The last thing we will do is to work out a z score for each well and identify "hits" - wells that really different from the negative control.
+
+First we have to mark wells as -ve control, +ve control or test.
+
+Col 1,23,25 and 47 are positive controls (100% kill, or no cells (empty wells)) - show on graph which ones. Negative controls (no drug) are cols 2,24,26 and 48 -the columns next to the postive controls.
+
+```{r, eval=FALSE}
+#lets label the columns as test, positive or negative control:
+
+plate_clean %>% 
+  mutate(wellTag = case_when(Col %in% c(1,23,25,47) ~ 'posCTRL',
+                      Col %in% c(2,24,26,48) ~ 'negCTRL',
+                      TRUE ~ 'test')) 
+
+```
+
+We can also double check that our code worked by using the count function
+```{r, eval=FALSE}
+plate_clean %>% 
+  mutate(wellTag = case_when(Col %in% c(1,23,25,47) ~ 'posCTRL',
+                      Col %in% c(2,24,26,48) ~ 'negCTRL',
+                      TRUE ~ 'test')) %>% 
+                      count(wellTag)
+```
+
+Now how do we save this as a variable?
+```{r}
+plateTagged <- plate_clean %>% 
+  mutate(wellTag = case_when(Col %in% c(1,23,25,47) ~ 'posCTRL',
+                      Col %in% c(2,24,26,48) ~ 'negCTRL',
+                      TRUE ~ 'test')) 
+```
+
+Now we know which well is which, we want to get the mean and sd of the negative controls
+
+How can we get just the negCTRL rows? (remember double == when comparing things)
+And then how can we get the mean and standard deviation? Which function
+
+***
+
+Challenge: Find the mean and sd of the negative control wells
+
+***
+
+Remember to save as a variable as we want to use these numbers again.
+```{r}
+ctrl_metrics <- plateTagged %>% 
+  filter(wellTag=="negCTRL" ) %>% 
+  summarize(mean_negCTRL = mean(Signal),
+            sd_negCTRL = sd(Signal))
+```
 
 
+How do we get just the rows with 'test'?
+Then we want a new column with the z score. 
+mutate(columnname = formula)
+
+The formula will be signal - meannegcontrol/sd
+
+Now how do we get to the negcontrol mean and sd?? This is what this dataframe looks like.
+```{r, eval=FALSE}
+ctrl_metrics
+```
+
+There are a few ways to do it.
+```{r, eval=FALSE}
+ctrl_metrics$mean_negCTRL
+```
+
+***
+
+Challenge: Calculate z score for test wells - with new column
+
+***
+
+Remember to save as variable.
+
+```{r}
+plate_zScores <- plateTagged %>%
+  filter(wellTag == "test") %>% 
+  mutate(z_score = (signal - ctrl_metrics$mean_negCTRL) / ctrl_metrics$sd_negCTRL)
+```
+
+Now we are going to say hits are ones where the z score is greater than 4 or less than -4 (multiple testing).
+
+What function should I use?
+```{r}
+hits <- plate_zScores %>% 
+  filter(z_score < -4 | z_score > 4) %>% 
+  arrange(z_score)
+```
+
+Write it out to a csv file. Function is write_csv - what do you think we need to tell it??
+```{r}
+write_csv(hits, path = "plate_analysis/hits_plate1.csv")
+```
+
+## For loops
+
+Now for our grand finale - we are going to go back to for loops. We have 5 plates! We want to do this for every plate!
+
+So what have we done?
+
+1. read in data
+2. make plot
+3. save plot
+4. get z scores
+5. save csv
+
+Which of these do we need to change???
 
 
+Plot density
+(skip if not time)
 
+```{r, eval=FALSE}
+plate_zScores %>% ggplot(aes(x = z_score)) + geom_density()
+ggsave("plate_analysis/signal_density_plate1.pdf",width=6,height=4)
+```
 
 
